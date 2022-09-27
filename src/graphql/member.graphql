@@ -1,0 +1,12 @@
+query Members {
+  members {
+    name
+    id
+    address
+    email
+    telNumber
+    isStudent
+    createdAt
+    updatedAt
+  }
+}
