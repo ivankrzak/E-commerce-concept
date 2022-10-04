@@ -1,4 +1,5 @@
 import { mergeResolvers } from '@graphql-tools/merge'
-import members from './members'
+import category from './category'
+import product from './product'
 
-export default mergeResolvers([members])
+export default mergeResolvers([product, category])

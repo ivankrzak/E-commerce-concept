@@ -6,221 +6,327 @@ import { Prisma, PrismaClient } from '@prisma/client'
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const prisma = new PrismaClient()
 
-const MembersData: Prisma.MemberCreateInput[] = [
+const ParentCategoriesData: Prisma.CategoryCreateInput[] = [
   {
-    firstName: 'Ivan',
-    lastName: 'Krzak',
-    email: 'ivan@prisma.io',
-    address: 'North street 234, Sin City',
-    telNumber: '0903888999',
-    isStudent: false,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103232321,
-        type: 'MONTHLY6',
-      },
-    },
+    name: 'Clothing',
   },
   {
-    firstName: 'James',
-    lastName: 'Deed',
-    email: 'jamesdeed@prisma.io',
-    address: 'East ave 133, Sin City',
-    telNumber: '0903321999',
-    isStudent: false,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103232332,
-        type: 'MONTHLY6',
-      },
-    },
+    name: 'Accessories',
+  },
+]
+
+const CategoriesData: Prisma.CategoryCreateInput[] = [
+  {
+    name: 'T-shirt',
+    parentCategory: { connect: { name: 'Clothing' } },
   },
   {
-    firstName: 'Joey Doe',
-    lastName: 'Chen',
-    email: 'joyedoechen@prisma.io',
-    address: 'Main street 67, Sin City',
-    telNumber: '0903888329',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103232331,
-        type: 'MONTHLY3',
-      },
-    },
+    name: 'Pants',
+    parentCategory: { connect: { name: 'Clothing' } },
   },
   {
-    firstName: 'Alice',
-    lastName: 'Cooper',
-    email: 'alicecooper@prisma.io',
-    address: 'Boulevard 234, Sin City',
-    telNumber: '0903288999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: [
-        {
-          barcode: 2103232111,
-          type: 'MONTHLY3',
-        },
-        {
-          barcode: 2103232311,
-          type: 'MONTHLY6',
-        },
-      ],
-    },
+    name: 'Socks',
+    parentCategory: { connect: { name: 'Accessories' } },
   },
   {
-    firstName: 'Ben',
-    lastName: 'Hendrik',
-    email: 'ben@prisma.io',
-    address: 'Misty street 234, Sin City',
-    telNumber: '0903338999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103222331,
-        type: 'ENTRY15',
-        entries: 5,
-      },
-    },
+    name: 'Bags',
+    parentCategory: { connect: { name: 'Accessories' } },
   },
   {
-    firstName: 'Elen',
-    lastName: 'Hendrik',
-    email: 'elnhendrik@prisma.io',
-    address: 'Misty street 899, Sin City',
-    telNumber: '0903138999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103222334,
-        type: 'ENTRY15',
-        entries: 2,
-      },
-    },
+    name: 'Hats',
+    parentCategory: { connect: { name: 'Accessories' } },
+  },
+]
+
+const ProductColorsData: Prisma.ProductColorCreateInput[] = [
+  {
+    name: 'White',
+    hexValue: '#ffffff',
   },
   {
-    firstName: 'Betty',
-    lastName: 'Nix',
-    email: 'bettynix@prisma.io',
-    address: 'North street 234, Sin City',
-    telNumber: '0903321999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: {
-        barcode: 2103222335,
-        type: 'ENTRY15',
-        entries: 8,
-      },
-    },
+    name: 'Black',
+    hexValue: '#000000',
   },
   {
-    firstName: 'Fluffy',
-    lastName: 'McGregor',
-    email: 'fluffymcgregor@prisma.io',
-    address: 'Tree street 11, Sin City',
-    telNumber: '0233321999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: {
-        barcode: 2103222336,
-        type: 'ENTRY15',
-        entries: 5,
-      },
-    },
+    name: 'Burgundy',
+    hexValue: '#C70039 ',
   },
   {
-    firstName: 'Monica',
-    lastName: 'Sunday',
-    email: 'monicasunday@prisma.io',
-    address: 'Sunset strip 234, Sin City',
-    telNumber: '0236721999',
-    isStudent: true,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: {
-        barcode: 2103222337,
-        type: 'ENTRY15',
-        entries: 12,
-      },
-    },
+    name: 'Blue',
+    hexValue: ' #33c1ff ',
   },
   {
-    firstName: 'Avery',
-    lastName: 'James',
-    email: 'averyjames@prisma.io',
-    address: 'Sunset strip 32, Sin City',
-    telNumber: '0236721999',
-    isStudent: false,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: {
-        barcode: 2103222339,
-        type: 'ENTRY15',
-        entries: 15,
-      },
-    },
+    name: 'Yellow',
+    hexValue: ' #fff633 ',
+  },
+]
+
+const ProductSizesData: Prisma.ProductSizeCreateInput[] = [
+  {
+    value: 'XS',
   },
   {
-    firstName: 'Nilu',
-    lastName: 'Grey',
-    email: 'nilugrey@prisma.io',
-    address: 'Main street  232, Sin City',
-    telNumber: '0234721999',
-    isStudent: false,
-    country: 'Slovakia',
-    gender: 'WOMAN',
-    memberships: {
-      create: {
-        barcode: 2103232338,
-        type: 'MONTHLY3',
-      },
-    },
+    value: 'S',
   },
   {
-    firstName: 'Mahmoud',
-    lastName: 'Dali',
-    email: 'mahmouddali@prisma.io',
-    address: 'Main street  231, Sin City',
-    telNumber: '0903873788',
-    isStudent: false,
-    country: 'Slovakia',
-    gender: 'MAN',
-    memberships: {
-      create: {
-        barcode: 2103232379,
-        type: 'MONTHLY3',
-      },
-    },
+    value: 'M',
+  },
+  {
+    value: 'L',
+  },
+  {
+    value: 'XL',
+  },
+]
+
+const ProductssData: Prisma.ProductCreateInput[] = [
+  {
+    slug: 'prismatic-tee',
+    name: 'Prismatic Tee',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also th",
+    category: { connect: { name: 'T-shirt' } },
+  },
+  {
+    slug: 'graphql-tee',
+    name: 'Graphql Tee',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also th",
+    category: { connect: { name: 'T-shirt' } },
+  },
+  {
+    slug: 'knee-high',
+    name: 'Knee High',
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also th",
+    category: { connect: { name: 'Socks' } },
+  },
+]
+
+const ProductVariantssData: Prisma.ProductVariantCreateInput[] = [
+  {
+    sku: 1001,
+    quantity: 100,
+    color: { connect: { name: 'White' } },
+    size: { connect: { value: 'XS' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1002,
+    quantity: 16,
+    color: { connect: { name: 'White' } },
+    size: { connect: { value: 'S' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1003,
+    quantity: 12,
+    color: { connect: { name: 'White' } },
+    size: { connect: { value: 'M' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1004,
+    quantity: 9,
+    color: { connect: { name: 'White' } },
+    size: { connect: { value: 'L' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1005,
+    quantity: 22,
+    color: { connect: { name: 'White' } },
+    size: { connect: { value: 'XL' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1010,
+    quantity: 100,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'XS' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1006,
+    quantity: 116,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'S' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1007,
+    quantity: 12,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'M' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1008,
+    quantity: 79,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'L' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 1009,
+    quantity: 122,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'XL' } },
+    product: { connect: { slug: 'prismatic-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2001,
+    quantity: 100,
+    color: { connect: { name: 'BLack' } },
+    size: { connect: { value: 'XS' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2002,
+    quantity: 116,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'S' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2003,
+    quantity: 12,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'M' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2004,
+    quantity: 79,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'L' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2005,
+    quantity: 122,
+    color: { connect: { name: 'Black' } },
+    size: { connect: { value: 'XL' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+
+  {
+    sku: 2006,
+    quantity: 33,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'XS' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2007,
+    quantity: 3,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'S' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2008,
+    quantity: 12,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'M' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2009,
+    quantity: 7,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'L' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 2010,
+    quantity: 2,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'XL' } },
+    product: { connect: { slug: 'graphql-tee' } },
+    price: 39,
+  },
+  {
+    sku: 3001,
+    quantity: 71,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'S' } },
+    product: { connect: { slug: 'knee-high' } },
+    price: 39,
+  },
+  {
+    sku: 3001,
+    quantity: 26,
+    color: { connect: { name: 'Burgundy' } },
+    size: { connect: { value: 'L' } },
+    product: { connect: { slug: 'knee-high' } },
+    price: 39,
   },
 ]
 
 export const main = async () => {
   try {
     console.log(`Start seeding ...`)
-    for (const member of MembersData) {
-      const memberData = await prisma.member.create({
-        data: member,
+
+    console.log(`===== CATEGORIES =====`)
+    for (const category of ParentCategoriesData) {
+      const categoriesData = await prisma.category.create({
+        data: category,
       })
-      console.log(`Created user with id: ${memberData.id}`)
+      console.log(`Created category with id: ${categoriesData.id}`)
+    }
+    for (const category of CategoriesData) {
+      const categoriesData = await prisma.category.create({
+        data: category,
+      })
+      console.log(`Created category with id: ${categoriesData.id}`)
+    }
+    console.log(`===== PRODUCT COLORS =====`)
+    for (const color of ProductColorsData) {
+      const productColorsData = await prisma.productColor.create({
+        data: color,
+      })
+      console.log(`Created product color with id: ${productColorsData.id}`)
+    }
+    console.log(`===== PRODUCT SIZES =====`)
+    for (const size of ProductSizesData) {
+      const productSizessData = await prisma.productSize.create({
+        data: size,
+      })
+      console.log(`Created product size with id: ${productSizessData.id}`)
+    }
+    console.log(`===== PRODUCTS =====`)
+    for (const product of ProductssData) {
+      const productssData = await prisma.product.create({
+        data: product,
+      })
+      console.log(`Created product size with id: ${productssData.id}`)
+    }
+    console.log(`===== PRODUCT VARIANTS =====`)
+    for (const variant of ProductVariantssData) {
+      const productVariantssData = await prisma.productVariant.create({
+        data: variant,
+      })
+      console.log(`Created product size with id: ${productVariantssData.id}`)
     }
 
     console.log(`Seeding finished.`)

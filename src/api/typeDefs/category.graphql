@@ -1,0 +1,14 @@
+type Category {
+  id: Int!
+  name: String!
+  parentCategoryId: Int
+  parentCategory: Category
+  subCategories: [Category]
+  createdAt: Date!
+  updatedAt: Date!
+  products: [Product]
+}
+
+type Query {
+  categories: [Category]!
+}

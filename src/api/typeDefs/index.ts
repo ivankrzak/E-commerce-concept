@@ -1,6 +1,6 @@
 import { mergeTypeDefs } from '@graphql-tools/merge'
+import category from './category.graphql'
 import date from './date.graphql'
-import member from './member.graphql'
-import membership from './membership.graphql'
+import product from './product.graphql'
 
-export default mergeTypeDefs([member, membership, date])
+export default mergeTypeDefs([product, category, date])

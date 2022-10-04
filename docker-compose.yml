@@ -1,16 +1,16 @@
 version: '3'
 services:
-  prisma-membership:
-    container_name: prisma-membership
+  e-commerce-concept:
+    container_name: E-commerce-concept
     platform: linux/amd64
-    image:  mysql
+    image: mysql
     restart: always
     ports:
-      - '5435:3306'
+      - '5445:3306'
     environment:
       MYSQL_ROOT_PASSWORD: prisma
     volumes:
-      - prisma-membership-volume:/var/lib/mysql
+      - e-commerce-concept-volume:/var/lib/mysql
 
 volumes:
-  prisma-membership-volume:
+  e-commerce-concept-volume:

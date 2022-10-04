@@ -1,0 +1,63 @@
+enum ProductStatus {
+  PRE_ORDER
+  ACTIVE
+  SALE
+  DISABLED
+}
+
+type Product {
+  id: Int!
+  slug: String!
+  name: String!
+  shortDescription: String
+  description: String
+  titleImage: String
+  categoryId: Int
+  isActive: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  variants: [ProductVariant]
+  category: Category
+}
+
+type ProductVariant {
+  id: Int!
+  productId: Int!
+  sku: Int
+  quantity: Int!
+  variantImage: String
+  status: ProductStatus
+  colorId: Int
+  sizeId: Int
+  price: Int!
+  salePrice: Int
+  createdAt: Date!
+  updatedAt: Date!
+  color: ProductColor
+  size: ProductSize
+  Product: Product
+}
+
+type ProductColor {
+  id: Int!
+  name: String!
+  hexValue: String!
+  createdAt: Date!
+  updatedAt: Date!
+  productVariants: [ProductVariant]
+}
+
+type ProductSize {
+  id: Int!
+  value: String!
+  createdAt: Date!
+  updatedAt: Date!
+  productVariants: [ProductVariant]
+}
+
+type Query {
+  products: [Product]!
+  productColors: [ProductColor]
+  productSizes: [ProductSize]
+  productVariants: [ProductVariant]
+}

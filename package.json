@@ -1,5 +1,5 @@
 {
-  "name": "next.js_boilerplate",
+  "name": "e_commerce_concept",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -29,7 +29,7 @@
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/merge": "^8.1.1",
     "@graphql-tools/schema": "^8.3.2",
-    "@prisma/client": "^3.14.0",
+    "@prisma/client": "^4.4.0",
     "apollo-errors": "^1.9.0",
     "apollo-server-micro": "^3.7.0",
     "framer-motion": "^6",
@@ -66,7 +66,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "prettier": "2.5.1",
-    "prisma": "^3.14.0",
+    "prisma": "^4.4.0",
     "ts-node": "^10.7.0"
   }
 }

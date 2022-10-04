@@ -1,14 +1,17 @@
 import { QueryResolvers } from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
-const Member: QueryResolvers = {
+const Category: QueryResolvers = {
   Query: {
-    members: async (
+    categories: async (
       _parent: unknown,
       _args: unknown,
       context: IPrismaContext
-    ) => context.prisma.member.findMany(),
+    ) =>
+      context.prisma.category.findMany({
+        include: { subCategories: true, parentCategory: true },
+      }),
   },
 }
 
-export default Member
+export default Category
