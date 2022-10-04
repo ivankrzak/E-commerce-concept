@@ -7,6 +7,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -29,8 +30,37 @@ export type Category = {
   updatedAt: Scalars['Date'];
 };
 
+export type CreateCategoryInput = {
+  name: Scalars['String'];
+  parentCategoryId?: InputMaybe<Scalars['Int']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createCategory?: Maybe<Category>;
+  deleteCategory?: Maybe<Scalars['Boolean']>;
+  updateCategory?: Maybe<Category>;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  input: CreateCategoryInput;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  categoryId: Scalars['Int'];
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars['Int'];
+  input: UpdateCategoryInput;
+};
+
 export type Product = {
   __typename?: 'Product';
+  category?: Maybe<Category>;
   categoryId?: Maybe<Scalars['Int']>;
   createdAt: Scalars['Date'];
   description?: Maybe<Scalars['String']>;
@@ -91,7 +121,16 @@ export type ProductVariant = {
 
 export type Query = {
   __typename?: 'Query';
+  categories: Array<Maybe<Category>>;
+  productColors?: Maybe<Array<Maybe<ProductColor>>>;
+  productSizes?: Maybe<Array<Maybe<ProductSize>>>;
+  productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
   products: Array<Maybe<Product>>;
+};
+
+export type UpdateCategoryInput = {
+  name?: InputMaybe<Scalars['String']>;
+  parentCategoryId?: InputMaybe<Scalars['Int']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -166,8 +205,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversTypes['Category']>, products?: Maybe<Array<Maybe<ResolversTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversTypes['Category']>>> }>;
+  CreateCategoryInput: CreateCategoryInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Product: ResolverTypeWrapper<ProductModel>;
   ProductColor: ResolverTypeWrapper<Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductSize: ResolverTypeWrapper<Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
@@ -175,20 +216,24 @@ export type ResolversTypes = ResolversObject<{
   ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'Product' | 'color' | 'size'> & { Product?: Maybe<ResolversTypes['Product']>, color?: Maybe<ResolversTypes['ProductColor']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateCategoryInput: UpdateCategoryInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Category: Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversParentTypes['Category']>, products?: Maybe<Array<Maybe<ResolversParentTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversParentTypes['Category']>>> };
+  CreateCategoryInput: CreateCategoryInput;
   Date: Scalars['Date'];
   Int: Scalars['Int'];
+  Mutation: {};
   Product: ProductModel;
   ProductColor: Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductSize: Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductVariant: Omit<ProductVariant, 'Product' | 'color' | 'size'> & { Product?: Maybe<ResolversParentTypes['Product']>, color?: Maybe<ResolversParentTypes['ProductColor']>, size?: Maybe<ResolversParentTypes['ProductSize']> };
   Query: {};
   String: Scalars['String'];
+  UpdateCategoryInput: UpdateCategoryInput;
 }>;
 
 export type CategoryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
@@ -207,7 +252,14 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
+export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
+  deleteCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'categoryId'>>;
+  updateCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'id' | 'input'>>;
+}>;
+
 export type ProductResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = ResolversObject<{
+  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   categoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -261,12 +313,17 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
 }>;
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  categories?: Resolver<Array<Maybe<ResolversTypes['Category']>>, ParentType, ContextType>;
+  productColors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductColor']>>>, ParentType, ContextType>;
+  productSizes?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSize']>>>, ParentType, ContextType>;
+  productVariants?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>>, ParentType, ContextType>;
   products?: Resolver<Array<Maybe<ResolversTypes['Product']>>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
   Category?: CategoryResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductColor?: ProductColorResolvers<ContextType>;
   ProductSize?: ProductSizeResolvers<ContextType>;

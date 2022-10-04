@@ -9,6 +9,22 @@ type Category {
   products: [Product]
 }
 
+input CreateCategoryInput {
+  name: String!
+  parentCategoryId: Int
+}
+
+input UpdateCategoryInput {
+  name: String
+  parentCategoryId: Int
+}
+
 type Query {
   categories: [Category]!
+}
+
+type Mutation {
+  createCategory(input: CreateCategoryInput!): Category
+  updateCategory(id: Int!, input: UpdateCategoryInput!): Category
+  deleteCategory(categoryId: Int!): Boolean
 }
