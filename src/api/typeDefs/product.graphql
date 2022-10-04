@@ -61,3 +61,36 @@ type Query {
   productSizes: [ProductSize]
   productVariants: [ProductVariant]
 }
+
+input CreateProductColorInput {
+  name: String!
+  hexValue: String!
+}
+
+input UpdateProductColorInput {
+  name: String
+  hexValue: String
+}
+
+input CreateProductSizeInput {
+  value: String!
+}
+
+input UpdateProductSizeInput {
+  value: String!
+}
+
+type Mutation {
+  createProductColor(input: CreateProductColorInput!): ProductColor
+  updateProductColor(
+    productColorId: Int!
+    input: UpdateProductColorInput!
+  ): ProductColor
+  deleteProductColor(productColorId: Int!): Boolean
+  createProductSize(input: CreateProductSizeInput!): ProductSize
+  updateProductSize(
+    productSizeId: Int!
+    input: UpdateProductSizeInput!
+  ): ProductSize
+  deleteProductSize(productSizeId: Int!): Boolean
+}

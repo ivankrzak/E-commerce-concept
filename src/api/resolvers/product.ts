@@ -19,22 +19,6 @@ const Product: QueryResolvers = {
       context.prisma.productVariant.findMany({
         include: { product: true, color: true, size: true },
       }),
-    productColors: async (
-      _parent: unknown,
-      _args: unknown,
-      context: IPrismaContext
-    ) =>
-      context.prisma.productColor.findMany({
-        include: { productVariants: true },
-      }),
-    productSizes: async (
-      _parent: unknown,
-      _args: unknown,
-      context: IPrismaContext
-    ) =>
-      context.prisma.productSize.findMany({
-        include: { productVariants: true },
-      }),
   },
 }
 
