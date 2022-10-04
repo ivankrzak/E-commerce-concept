@@ -1,0 +1,102 @@
+type ProductVariant {
+  id: Int!
+  productId: Int!
+  sku: Int
+  quantity: Int!
+  variantImage: String
+  status: ProductStatus
+  colorId: Int
+  sizeId: Int
+  price: Int!
+  salePrice: Int
+  createdAt: Date!
+  updatedAt: Date!
+  color: ProductColor
+  size: ProductSize
+  product: Product
+}
+
+input CreateProductVariantInput {
+  productId: Int!
+  sku: Int
+  quantity: Int!
+  price: Int!
+  variantImage: String
+  status: ProductStatus
+  colorId: Int
+  sizeId: Int
+  salePrice: Int
+}
+
+input UpdateProductVariantInput {
+  sku: Int
+  quantity: Int
+  price: Int
+  variantImage: String
+  status: ProductStatus
+  colorId: Int
+  sizeId: Int
+  salePrice: Int
+}
+
+type ProductColor {
+  id: Int!
+  name: String!
+  hexValue: String!
+  createdAt: Date!
+  updatedAt: Date!
+  productVariants: [ProductVariant]
+}
+
+type ProductSize {
+  id: Int!
+  value: String!
+  createdAt: Date!
+  updatedAt: Date!
+  productVariants: [ProductVariant]
+}
+
+input CreateProductColorInput {
+  name: String!
+  hexValue: String!
+}
+
+input UpdateProductColorInput {
+  name: String
+  hexValue: String
+}
+
+input CreateProductSizeInput {
+  value: String!
+}
+
+input UpdateProductSizeInput {
+  value: String!
+}
+
+type Query {
+  productColors: [ProductColor]
+  productSizes: [ProductSize]
+  productVariants: [ProductVariant]
+}
+
+type Mutation {
+  createProductVariant(input: CreateProductVariantInput!): ProductVariant
+  updateProductVariant(
+    productVariantId: Int!
+    input: UpdateProductVariantInput!
+  ): ProductVariant
+  deleteProductVariant(productVariantId: Int!): Boolean
+  createProductColor(input: CreateProductColorInput!): ProductColor
+  updateProductColor(
+    productColorId: Int!
+    input: UpdateProductColorInput!
+  ): ProductColor
+  deleteProductColor(productColorId: Int!): Boolean
+  createProductSize(input: CreateProductSizeInput!): ProductSize
+  updateProductSize(
+    productSizeId: Int!
+    input: UpdateProductSizeInput!
+  ): ProductSize
+  deleteProductSize(productSizeId: Int!): Boolean
+}

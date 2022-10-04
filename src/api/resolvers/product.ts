@@ -13,15 +13,7 @@ const Product: QueryResolvers = {
       context: IPrismaContext
     ) =>
       context.prisma.product.findMany({
-        include: { category: true },
-      }),
-    productVariants: async (
-      _parent: unknown,
-      _args: unknown,
-      context: IPrismaContext
-    ) =>
-      context.prisma.productVariant.findMany({
-        include: { product: true, color: true, size: true },
+        include: { category: true, variants: true },
       }),
   },
   Mutation: {

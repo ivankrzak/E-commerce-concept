@@ -2,5 +2,6 @@ import { mergeTypeDefs } from '@graphql-tools/merge'
 import category from './category.graphql'
 import date from './date.graphql'
 import product from './product.graphql'
+import productVariant from './productVariant.graphql'
 
-export default mergeTypeDefs([product, category, date])
+export default mergeTypeDefs([product, productVariant, category, date])

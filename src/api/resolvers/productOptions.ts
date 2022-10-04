@@ -7,7 +7,7 @@ import {
 } from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
-const Category: QueryResolvers = {
+const ProductOptions: QueryResolvers = {
   Query: {
     productColors: async (
       _parent: unknown,
@@ -121,4 +121,4 @@ const Category: QueryResolvers = {
   },
 }
 
-export default Category
+export default ProductOptions

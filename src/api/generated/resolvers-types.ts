@@ -54,20 +54,35 @@ export type CreateProductSizeInput = {
   value: Scalars['String'];
 };
 
+export type CreateProductVariantInput = {
+  colorId?: InputMaybe<Scalars['Int']>;
+  price: Scalars['Int'];
+  productId: Scalars['Int'];
+  quantity: Scalars['Int'];
+  salePrice?: InputMaybe<Scalars['Int']>;
+  sizeId?: InputMaybe<Scalars['Int']>;
+  sku?: InputMaybe<Scalars['Int']>;
+  status?: InputMaybe<ProductStatus>;
+  variantImage?: InputMaybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory?: Maybe<Category>;
   createProduct?: Maybe<Product>;
   createProductColor?: Maybe<ProductColor>;
   createProductSize?: Maybe<ProductSize>;
+  createProductVariant?: Maybe<ProductVariant>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
   deleteProduct?: Maybe<Scalars['Boolean']>;
   deleteProductColor?: Maybe<Scalars['Boolean']>;
   deleteProductSize?: Maybe<Scalars['Boolean']>;
+  deleteProductVariant?: Maybe<Scalars['Boolean']>;
   updateCategory?: Maybe<Category>;
   updateProduct?: Maybe<Product>;
   updateProductColor?: Maybe<ProductColor>;
   updateProductSize?: Maybe<ProductSize>;
+  updateProductVariant?: Maybe<ProductVariant>;
 };
 
 
@@ -91,6 +106,11 @@ export type MutationCreateProductSizeArgs = {
 };
 
 
+export type MutationCreateProductVariantArgs = {
+  input: CreateProductVariantInput;
+};
+
+
 export type MutationDeleteCategoryArgs = {
   categoryId: Scalars['Int'];
 };
@@ -108,6 +128,11 @@ export type MutationDeleteProductColorArgs = {
 
 export type MutationDeleteProductSizeArgs = {
   productSizeId: Scalars['Int'];
+};
+
+
+export type MutationDeleteProductVariantArgs = {
+  productVariantId: Scalars['Int'];
 };
 
 
@@ -132,6 +157,12 @@ export type MutationUpdateProductColorArgs = {
 export type MutationUpdateProductSizeArgs = {
   input: UpdateProductSizeInput;
   productSizeId: Scalars['Int'];
+};
+
+
+export type MutationUpdateProductVariantArgs = {
+  input: UpdateProductVariantInput;
+  productVariantId: Scalars['Int'];
 };
 
 export type Product = {
@@ -178,12 +209,12 @@ export enum ProductStatus {
 
 export type ProductVariant = {
   __typename?: 'ProductVariant';
-  Product?: Maybe<Product>;
   color?: Maybe<ProductColor>;
   colorId?: Maybe<Scalars['Int']>;
   createdAt: Scalars['Date'];
   id: Scalars['Int'];
   price: Scalars['Int'];
+  product?: Maybe<Product>;
   productId: Scalars['Int'];
   quantity: Scalars['Int'];
   salePrice?: Maybe<Scalars['Int']>;
@@ -226,6 +257,17 @@ export type UpdateProductInput = {
 
 export type UpdateProductSizeInput = {
   value: Scalars['String'];
+};
+
+export type UpdateProductVariantInput = {
+  colorId?: InputMaybe<Scalars['Int']>;
+  price?: InputMaybe<Scalars['Int']>;
+  quantity?: InputMaybe<Scalars['Int']>;
+  salePrice?: InputMaybe<Scalars['Int']>;
+  sizeId?: InputMaybe<Scalars['Int']>;
+  sku?: InputMaybe<Scalars['Int']>;
+  status?: InputMaybe<ProductStatus>;
+  variantImage?: InputMaybe<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -304,6 +346,7 @@ export type ResolversTypes = ResolversObject<{
   CreateProductColorInput: CreateProductColorInput;
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
+  CreateProductVariantInput: CreateProductVariantInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -311,13 +354,14 @@ export type ResolversTypes = ResolversObject<{
   ProductColor: ResolverTypeWrapper<Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductSize: ResolverTypeWrapper<Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductStatus: ProductStatus;
-  ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'Product' | 'color' | 'size'> & { Product?: Maybe<ResolversTypes['Product']>, color?: Maybe<ResolversTypes['ProductColor']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
+  ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversTypes['ProductColor']>, product?: Maybe<ResolversTypes['Product']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateProductColorInput: UpdateProductColorInput;
   UpdateProductInput: UpdateProductInput;
   UpdateProductSizeInput: UpdateProductSizeInput;
+  UpdateProductVariantInput: UpdateProductVariantInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -328,19 +372,21 @@ export type ResolversParentTypes = ResolversObject<{
   CreateProductColorInput: CreateProductColorInput;
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
+  CreateProductVariantInput: CreateProductVariantInput;
   Date: Scalars['Date'];
   Int: Scalars['Int'];
   Mutation: {};
   Product: ProductModel;
   ProductColor: Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductSize: Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
-  ProductVariant: Omit<ProductVariant, 'Product' | 'color' | 'size'> & { Product?: Maybe<ResolversParentTypes['Product']>, color?: Maybe<ResolversParentTypes['ProductColor']>, size?: Maybe<ResolversParentTypes['ProductSize']> };
+  ProductVariant: Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversParentTypes['ProductColor']>, product?: Maybe<ResolversParentTypes['Product']>, size?: Maybe<ResolversParentTypes['ProductSize']> };
   Query: {};
   String: Scalars['String'];
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateProductColorInput: UpdateProductColorInput;
   UpdateProductInput: UpdateProductInput;
   UpdateProductSizeInput: UpdateProductSizeInput;
+  UpdateProductVariantInput: UpdateProductVariantInput;
 }>;
 
 export type CategoryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
@@ -364,14 +410,17 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
   createProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'input'>>;
   createProductColor?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType, RequireFields<MutationCreateProductColorArgs, 'input'>>;
   createProductSize?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType, RequireFields<MutationCreateProductSizeArgs, 'input'>>;
+  createProductVariant?: Resolver<Maybe<ResolversTypes['ProductVariant']>, ParentType, ContextType, RequireFields<MutationCreateProductVariantArgs, 'input'>>;
   deleteCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'categoryId'>>;
   deleteProduct?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductArgs, 'productId'>>;
   deleteProductColor?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductColorArgs, 'productColorId'>>;
   deleteProductSize?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductSizeArgs, 'productSizeId'>>;
+  deleteProductVariant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductVariantArgs, 'productVariantId'>>;
   updateCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'id' | 'input'>>;
   updateProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationUpdateProductArgs, 'input' | 'productId'>>;
   updateProductColor?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType, RequireFields<MutationUpdateProductColorArgs, 'input' | 'productColorId'>>;
   updateProductSize?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType, RequireFields<MutationUpdateProductSizeArgs, 'input' | 'productSizeId'>>;
+  updateProductVariant?: Resolver<Maybe<ResolversTypes['ProductVariant']>, ParentType, ContextType, RequireFields<MutationUpdateProductVariantArgs, 'input' | 'productVariantId'>>;
 }>;
 
 export type ProductResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = ResolversObject<{
@@ -410,12 +459,12 @@ export type ProductSizeResolvers<ContextType = IPrismaContext, ParentType extend
 }>;
 
 export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['ProductVariant'] = ResolversParentTypes['ProductVariant']> = ResolversObject<{
-  Product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
   color?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType>;
   colorId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
   productId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   salePrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
