@@ -80,7 +80,30 @@ input UpdateProductSizeInput {
   value: String!
 }
 
+input CreateProductInput {
+  slug: String!
+  name: String!
+  shortDescription: String
+  description: String
+  categoryId: Int
+  titleImage: String
+  isActive: Boolean
+}
+
+input UpdateProductInput {
+  slug: String
+  name: String
+  shortDescription: String
+  description: String
+  categoryId: Int
+  titleImage: String
+  isActive: Boolean
+}
+
 type Mutation {
+  createProduct(input: CreateProductInput!): Product
+  updateProduct(input: UpdateProductInput!, productId: Int!): Product
+  deleteProduct(productId: Int!): Boolean
   createProductColor(input: CreateProductColorInput!): ProductColor
   updateProductColor(
     productColorId: Int!

@@ -1,4 +1,8 @@
-import { QueryResolvers } from '../generated/resolvers-types'
+import {
+  CreateProductInput,
+  QueryResolvers,
+  UpdateProductInput,
+} from '../generated/resolvers-types'
 import { IPrismaContext } from '../prisma/IPrismaContext'
 
 const Product: QueryResolvers = {
@@ -19,6 +23,39 @@ const Product: QueryResolvers = {
       context.prisma.productVariant.findMany({
         include: { product: true, color: true, size: true },
       }),
+  },
+  Mutation: {
+    createProduct: async (
+      _parent: unknown,
+      args: { input: CreateProductInput },
+      context: IPrismaContext
+    ) =>
+      context.prisma.product.create({
+        data: {
+          ...args.input,
+        },
+      }),
+    updateProduct: async (
+      _parent: unknown,
+      args: { input: UpdateProductInput; productId: number },
+      context: IPrismaContext
+    ) =>
+      context.prisma.product.update({
+        where: { id: args.productId },
+        data: {
+          ...args.input,
+        },
+      }),
+    deleteProduct: async (
+      _parent: unknown,
+      args: { productId: number },
+      context: IPrismaContext
+    ) =>
+      Boolean(
+        await context.prisma.product.delete({
+          where: { id: args.productId },
+        })
+      ),
   },
 }
 
