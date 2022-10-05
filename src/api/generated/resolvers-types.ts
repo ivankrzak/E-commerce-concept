@@ -270,6 +270,11 @@ export type UpdateProductVariantInput = {
   variantImage?: InputMaybe<Scalars['String']>;
 };
 
+export enum UserRole {
+  Admin = 'ADMIN',
+  Customer = 'CUSTOMER'
+}
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
@@ -362,6 +367,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateProductInput: UpdateProductInput;
   UpdateProductSizeInput: UpdateProductSizeInput;
   UpdateProductVariantInput: UpdateProductVariantInput;
+  UserRole: UserRole;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */

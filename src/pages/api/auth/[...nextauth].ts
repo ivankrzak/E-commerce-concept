@@ -12,4 +12,14 @@ export default NextAuth({
     }),
   ],
   secret: process.env.SECRET,
+  callbacks: {
+    session({ session, user }) {
+      return {
+        expires: session.expires,
+        user: user.name,
+        userId: user.id,
+        userRole: user.role,
+      }
+    },
+  },
 })
