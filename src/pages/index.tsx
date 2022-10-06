@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/react'
+import { useProductsQuery } from 'generated/generated-graphql'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -7,7 +8,9 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   const { data: session } = useSession()
+  const { data } = useProductsQuery()
   console.log('session', session)
+  console.log(data)
 
   return (
     <div className={styles.container}>

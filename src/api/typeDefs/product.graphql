@@ -41,7 +41,7 @@ input UpdateProductInput {
 }
 
 type Query {
-  products: [Product]!
+  products: [Product]! @isAuth(userRoles: [CUSTOMER])
 }
 
 type Mutation {

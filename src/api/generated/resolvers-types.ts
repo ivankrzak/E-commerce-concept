@@ -395,6 +395,12 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateProductVariantInput: UpdateProductVariantInput;
 }>;
 
+export type IsAuthDirectiveArgs = {
+  userRoles?: Maybe<Array<UserRole>>;
+};
+
+export type IsAuthDirectiveResolver<Result, Parent, ContextType = IPrismaContext, Args = IsAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type CategoryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -502,3 +508,6 @@ export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
   Query?: QueryResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = IPrismaContext> = ResolversObject<{
+  isAuth?: IsAuthDirectiveResolver<any, any, ContextType>;
+}>;

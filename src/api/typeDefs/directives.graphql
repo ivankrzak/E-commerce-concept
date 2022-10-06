@@ -1,0 +1,6 @@
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+directive @isAuth(userRoles: [UserRole!]) on FIELD_DEFINITION

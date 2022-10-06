@@ -16,81 +16,296 @@ export type Scalars = {
   Date: string;
 };
 
-export type Member = {
-  __typename?: 'Member';
-  address?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Date']>;
-  email?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['Int']>;
-  isStudent?: Maybe<Scalars['Boolean']>;
-  memberships?: Maybe<Array<Maybe<Membership>>>;
-  name?: Maybe<Scalars['String']>;
-  telNumber?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['Date']>;
+export type Category = {
+  __typename?: 'Category';
+  createdAt: Scalars['Date'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  parentCategory?: Maybe<Category>;
+  parentCategoryId?: Maybe<Scalars['Int']>;
+  products?: Maybe<Array<Maybe<Product>>>;
+  subCategories?: Maybe<Array<Maybe<Category>>>;
+  updatedAt: Scalars['Date'];
 };
 
-export type Membership = {
-  __typename?: 'Membership';
-  address?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Date']>;
-  email?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['Int']>;
-  isStudent?: Maybe<Scalars['Boolean']>;
-  memberships?: Maybe<Array<Maybe<Membership>>>;
-  name?: Maybe<Scalars['String']>;
-  telNumber?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['Date']>;
+export type CreateCategoryInput = {
+  name: Scalars['String'];
+  parentCategoryId?: InputMaybe<Scalars['Int']>;
+};
+
+export type CreateProductColorInput = {
+  hexValue: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type CreateProductInput = {
+  categoryId?: InputMaybe<Scalars['Int']>;
+  description?: InputMaybe<Scalars['String']>;
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  name: Scalars['String'];
+  shortDescription?: InputMaybe<Scalars['String']>;
+  slug: Scalars['String'];
+  titleImage?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateProductSizeInput = {
+  value: Scalars['String'];
+};
+
+export type CreateProductVariantInput = {
+  colorId?: InputMaybe<Scalars['Int']>;
+  price: Scalars['Int'];
+  productId: Scalars['Int'];
+  quantity: Scalars['Int'];
+  salePrice?: InputMaybe<Scalars['Int']>;
+  sizeId?: InputMaybe<Scalars['Int']>;
+  sku?: InputMaybe<Scalars['Int']>;
+  status?: InputMaybe<ProductStatus>;
+  variantImage?: InputMaybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createCategory?: Maybe<Category>;
+  createProduct?: Maybe<Product>;
+  createProductColor?: Maybe<ProductColor>;
+  createProductSize?: Maybe<ProductSize>;
+  createProductVariant?: Maybe<ProductVariant>;
+  deleteCategory?: Maybe<Scalars['Boolean']>;
+  deleteProduct?: Maybe<Scalars['Boolean']>;
+  deleteProductColor?: Maybe<Scalars['Boolean']>;
+  deleteProductSize?: Maybe<Scalars['Boolean']>;
+  deleteProductVariant?: Maybe<Scalars['Boolean']>;
+  updateCategory?: Maybe<Category>;
+  updateProduct?: Maybe<Product>;
+  updateProductColor?: Maybe<ProductColor>;
+  updateProductSize?: Maybe<ProductSize>;
+  updateProductVariant?: Maybe<ProductVariant>;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  input: CreateCategoryInput;
+};
+
+
+export type MutationCreateProductArgs = {
+  input: CreateProductInput;
+};
+
+
+export type MutationCreateProductColorArgs = {
+  input: CreateProductColorInput;
+};
+
+
+export type MutationCreateProductSizeArgs = {
+  input: CreateProductSizeInput;
+};
+
+
+export type MutationCreateProductVariantArgs = {
+  input: CreateProductVariantInput;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  categoryId: Scalars['Int'];
+};
+
+
+export type MutationDeleteProductArgs = {
+  productId: Scalars['Int'];
+};
+
+
+export type MutationDeleteProductColorArgs = {
+  productColorId: Scalars['Int'];
+};
+
+
+export type MutationDeleteProductSizeArgs = {
+  productSizeId: Scalars['Int'];
+};
+
+
+export type MutationDeleteProductVariantArgs = {
+  productVariantId: Scalars['Int'];
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars['Int'];
+  input: UpdateCategoryInput;
+};
+
+
+export type MutationUpdateProductArgs = {
+  input: UpdateProductInput;
+  productId: Scalars['Int'];
+};
+
+
+export type MutationUpdateProductColorArgs = {
+  input: UpdateProductColorInput;
+  productColorId: Scalars['Int'];
+};
+
+
+export type MutationUpdateProductSizeArgs = {
+  input: UpdateProductSizeInput;
+  productSizeId: Scalars['Int'];
+};
+
+
+export type MutationUpdateProductVariantArgs = {
+  input: UpdateProductVariantInput;
+  productVariantId: Scalars['Int'];
+};
+
+export type Product = {
+  __typename?: 'Product';
+  category?: Maybe<Category>;
+  categoryId?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['Date'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  isActive: Scalars['Boolean'];
+  name: Scalars['String'];
+  shortDescription?: Maybe<Scalars['String']>;
+  slug: Scalars['String'];
+  titleImage?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['Date'];
+  variants?: Maybe<Array<Maybe<ProductVariant>>>;
+};
+
+export type ProductColor = {
+  __typename?: 'ProductColor';
+  createdAt: Scalars['Date'];
+  hexValue: Scalars['String'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
+  updatedAt: Scalars['Date'];
+};
+
+export type ProductSize = {
+  __typename?: 'ProductSize';
+  createdAt: Scalars['Date'];
+  id: Scalars['Int'];
+  productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
+  updatedAt: Scalars['Date'];
+  value: Scalars['String'];
+};
+
+export enum ProductStatus {
+  Active = 'ACTIVE',
+  Disabled = 'DISABLED',
+  PreOrder = 'PRE_ORDER',
+  Sale = 'SALE'
+}
+
+export type ProductVariant = {
+  __typename?: 'ProductVariant';
+  color?: Maybe<ProductColor>;
+  colorId?: Maybe<Scalars['Int']>;
+  createdAt: Scalars['Date'];
+  id: Scalars['Int'];
+  price: Scalars['Int'];
+  product?: Maybe<Product>;
+  productId: Scalars['Int'];
+  quantity: Scalars['Int'];
+  salePrice?: Maybe<Scalars['Int']>;
+  size?: Maybe<ProductSize>;
+  sizeId?: Maybe<Scalars['Int']>;
+  sku?: Maybe<Scalars['Int']>;
+  status?: Maybe<ProductStatus>;
+  updatedAt: Scalars['Date'];
+  variantImage?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  members: Array<Maybe<Member>>;
+  categories: Array<Maybe<Category>>;
+  productColors?: Maybe<Array<Maybe<ProductColor>>>;
+  productSizes?: Maybe<Array<Maybe<ProductSize>>>;
+  productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
+  products: Array<Maybe<Product>>;
 };
 
-export type MembersQueryVariables = Exact<{ [key: string]: never; }>;
+export type UpdateCategoryInput = {
+  name?: InputMaybe<Scalars['String']>;
+  parentCategoryId?: InputMaybe<Scalars['Int']>;
+};
+
+export type UpdateProductColorInput = {
+  hexValue?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProductInput = {
+  categoryId?: InputMaybe<Scalars['Int']>;
+  description?: InputMaybe<Scalars['String']>;
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  titleImage?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProductSizeInput = {
+  value: Scalars['String'];
+};
+
+export type UpdateProductVariantInput = {
+  colorId?: InputMaybe<Scalars['Int']>;
+  price?: InputMaybe<Scalars['Int']>;
+  quantity?: InputMaybe<Scalars['Int']>;
+  salePrice?: InputMaybe<Scalars['Int']>;
+  sizeId?: InputMaybe<Scalars['Int']>;
+  sku?: InputMaybe<Scalars['Int']>;
+  status?: InputMaybe<ProductStatus>;
+  variantImage?: InputMaybe<Scalars['String']>;
+};
+
+export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'Member', name?: string | null, id?: number | null, address?: string | null, email?: string | null, telNumber?: string | null, isStudent?: boolean | null, createdAt?: string | null, updatedAt?: string | null } | null> };
+export type ProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', slug: string, name: string } | null> };
 
 
-export const MembersDocument = gql`
-    query Members {
-  members {
+export const ProductsDocument = gql`
+    query Products {
+  products {
+    slug
     name
-    id
-    address
-    email
-    telNumber
-    isStudent
-    createdAt
-    updatedAt
   }
 }
     `;
 
 /**
- * __useMembersQuery__
+ * __useProductsQuery__
  *
- * To run a query within a React component, call `useMembersQuery` and pass it any options that fit your needs.
- * When your component renders, `useMembersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMembersQuery({
+ * const { data, loading, error } = useProductsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMembersQuery(baseOptions?: Apollo.QueryHookOptions<MembersQuery, MembersQueryVariables>) {
+export function useProductsQuery(baseOptions?: Apollo.QueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MembersQuery, MembersQueryVariables>(MembersDocument, options);
+        return Apollo.useQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
       }
-export function useMembersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MembersQuery, MembersQueryVariables>) {
+export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MembersQuery, MembersQueryVariables>(MembersDocument, options);
+          return Apollo.useLazyQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
         }
-export type MembersQueryHookResult = ReturnType<typeof useMembersQuery>;
-export type MembersLazyQueryHookResult = ReturnType<typeof useMembersLazyQuery>;
-export type MembersQueryResult = Apollo.QueryResult<MembersQuery, MembersQueryVariables>;
+export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
+export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
+export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
