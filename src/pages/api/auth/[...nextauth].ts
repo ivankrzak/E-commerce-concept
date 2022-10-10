@@ -1,5 +1,6 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import Prisma from 'api/prisma/client'
+import { scryptSync, timingSafeEqual } from 'crypto'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GitHubProvider from 'next-auth/providers/github'
@@ -17,23 +18,24 @@ export default NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        email: { label: 'email', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         // Add logic here to look up the user from the credentials supplied
-        const dbUser = await Prisma.user.findFirst({
-          where: { name: credentials?.username },
+        const user = await Prisma.user.findUnique({
+          where: { email: credentials?.email },
         })
 
-        if (dbUser && dbUser.password === credentials?.password) {
-          return dbUser
+        if (user && user.password && credentials) {
+          const [salt, key] = user.password.split(':')
+          const hashedBuffer = scryptSync(credentials.password, salt, 64)
+          const keyBuffer = Buffer.from(key, 'hex')
+          const isMatch = timingSafeEqual(hashedBuffer, keyBuffer)
+
+          return isMatch ? user : null
         }
-
-        // If you return null then an error will be displayed advising the user to check their details.
         return null
-
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
       },
     }),
   ],

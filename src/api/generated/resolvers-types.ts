@@ -66,6 +66,17 @@ export type CreateProductVariantInput = {
   variantImage?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateUserInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory?: Maybe<Category>;
@@ -73,6 +84,7 @@ export type Mutation = {
   createProductColor?: Maybe<ProductColor>;
   createProductSize?: Maybe<ProductSize>;
   createProductVariant?: Maybe<ProductVariant>;
+  createUser?: Maybe<User>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
   deleteProduct?: Maybe<Scalars['Boolean']>;
   deleteProductColor?: Maybe<Scalars['Boolean']>;
@@ -108,6 +120,11 @@ export type MutationCreateProductSizeArgs = {
 
 export type MutationCreateProductVariantArgs = {
   input: CreateProductVariantInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
 };
 
 
@@ -229,10 +246,16 @@ export type ProductVariant = {
 export type Query = {
   __typename?: 'Query';
   categories: Array<Maybe<Category>>;
+  login?: Maybe<Scalars['Boolean']>;
   productColors?: Maybe<Array<Maybe<ProductColor>>>;
   productSizes?: Maybe<Array<Maybe<ProductSize>>>;
   productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
   products: Array<Maybe<Product>>;
+};
+
+
+export type QueryLoginArgs = {
+  input: LoginInput;
 };
 
 export type UpdateCategoryInput = {
@@ -268,6 +291,13 @@ export type UpdateProductVariantInput = {
   sku?: InputMaybe<Scalars['Int']>;
   status?: InputMaybe<ProductStatus>;
   variantImage?: InputMaybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export enum UserRole {
@@ -352,8 +382,10 @@ export type ResolversTypes = ResolversObject<{
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
   CreateProductVariantInput: CreateProductVariantInput;
+  CreateUserInput: CreateUserInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
   Product: ResolverTypeWrapper<ProductModel>;
   ProductColor: ResolverTypeWrapper<Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
@@ -367,6 +399,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateProductInput: UpdateProductInput;
   UpdateProductSizeInput: UpdateProductSizeInput;
   UpdateProductVariantInput: UpdateProductVariantInput;
+  User: ResolverTypeWrapper<User>;
   UserRole: UserRole;
 }>;
 
@@ -379,8 +412,10 @@ export type ResolversParentTypes = ResolversObject<{
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
   CreateProductVariantInput: CreateProductVariantInput;
+  CreateUserInput: CreateUserInput;
   Date: Scalars['Date'];
   Int: Scalars['Int'];
+  LoginInput: LoginInput;
   Mutation: {};
   Product: ProductModel;
   ProductColor: Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
@@ -393,6 +428,7 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateProductInput: UpdateProductInput;
   UpdateProductSizeInput: UpdateProductSizeInput;
   UpdateProductVariantInput: UpdateProductVariantInput;
+  User: User;
 }>;
 
 export type IsAuthDirectiveArgs = {
@@ -423,6 +459,7 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
   createProductColor?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType, RequireFields<MutationCreateProductColorArgs, 'input'>>;
   createProductSize?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType, RequireFields<MutationCreateProductSizeArgs, 'input'>>;
   createProductVariant?: Resolver<Maybe<ResolversTypes['ProductVariant']>, ParentType, ContextType, RequireFields<MutationCreateProductVariantArgs, 'input'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   deleteCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'categoryId'>>;
   deleteProduct?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductArgs, 'productId'>>;
   deleteProductColor?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProductColorArgs, 'productColorId'>>;
@@ -491,10 +528,18 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   categories?: Resolver<Array<Maybe<ResolversTypes['Category']>>, ParentType, ContextType>;
+  login?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
   productColors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductColor']>>>, ParentType, ContextType>;
   productSizes?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSize']>>>, ParentType, ContextType>;
   productVariants?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>>, ParentType, ContextType>;
   products?: Resolver<Array<Maybe<ResolversTypes['Product']>>, ParentType, ContextType>;
+}>;
+
+export type UserResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
@@ -506,6 +551,7 @@ export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
   ProductSize?: ProductSizeResolvers<ContextType>;
   ProductVariant?: ProductVariantResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 }>;
 
 export type DirectiveResolvers<ContextType = IPrismaContext> = ResolversObject<{

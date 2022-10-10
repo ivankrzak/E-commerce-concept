@@ -64,6 +64,17 @@ export type CreateProductVariantInput = {
   variantImage?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateUserInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory?: Maybe<Category>;
@@ -71,6 +82,7 @@ export type Mutation = {
   createProductColor?: Maybe<ProductColor>;
   createProductSize?: Maybe<ProductSize>;
   createProductVariant?: Maybe<ProductVariant>;
+  createUser?: Maybe<User>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
   deleteProduct?: Maybe<Scalars['Boolean']>;
   deleteProductColor?: Maybe<Scalars['Boolean']>;
@@ -106,6 +118,11 @@ export type MutationCreateProductSizeArgs = {
 
 export type MutationCreateProductVariantArgs = {
   input: CreateProductVariantInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
 };
 
 
@@ -227,10 +244,16 @@ export type ProductVariant = {
 export type Query = {
   __typename?: 'Query';
   categories: Array<Maybe<Category>>;
+  login?: Maybe<Scalars['Boolean']>;
   productColors?: Maybe<Array<Maybe<ProductColor>>>;
   productSizes?: Maybe<Array<Maybe<ProductSize>>>;
   productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
   products: Array<Maybe<Product>>;
+};
+
+
+export type QueryLoginArgs = {
+  input: LoginInput;
 };
 
 export type UpdateCategoryInput = {
@@ -268,10 +291,29 @@ export type UpdateProductVariantInput = {
   variantImage?: InputMaybe<Scalars['String']>;
 };
 
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Customer = 'CUSTOMER'
+}
+
 export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', slug: string, name: string } | null> };
+
+export type LoginQueryVariables = Exact<{
+  input: LoginInput;
+}>;
+
+
+export type LoginQuery = { __typename?: 'Query', login?: boolean | null };
 
 
 export const ProductsDocument = gql`
@@ -309,3 +351,36 @@ export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
 export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
 export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
 export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
+export const LoginDocument = gql`
+    query Login($input: LoginInput!) {
+  login(input: $input)
+}
+    `;
+
+/**
+ * __useLoginQuery__
+ *
+ * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoginQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+      }
+export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+        }
+export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
+export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
+export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;

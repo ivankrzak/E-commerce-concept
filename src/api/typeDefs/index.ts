@@ -4,6 +4,7 @@ import date from './date.graphql'
 import directives from './directives.graphql'
 import product from './product.graphql'
 import productVariant from './productVariant.graphql'
+import user from './user.graphql'
 
 export default mergeTypeDefs([
   product,
@@ -11,4 +12,5 @@ export default mergeTypeDefs([
   productVariant,
   category,
   date,
+  user,
 ])

@@ -1,0 +1,24 @@
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type User {
+  name: String!
+  email: String!
+  password: String!
+}
+
+type Query {
+  login(input: LoginInput!): Boolean
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User
+}
