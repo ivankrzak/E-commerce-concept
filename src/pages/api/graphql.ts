@@ -4,7 +4,7 @@
 import { ApolloServer } from 'apollo-server-micro'
 import Cors from 'micro-cors'
 import { createContext } from '../../api/graphql/context'
-import Schema from '../../api/utils/schema'
+import { Schema } from '../../api/utils/schema'
 
 const cors = Cors()
 

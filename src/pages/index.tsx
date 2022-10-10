@@ -1,12 +1,15 @@
-import { useMembersQuery } from 'generated/generated-graphql'
+import { Button } from '@chakra-ui/react'
+import { useProductsQuery } from 'generated/generated-graphql'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-  const { data } = useMembersQuery()
-
+  const { data: session } = useSession()
+  const { data } = useProductsQuery()
+  console.log('session', session)
   console.log(data)
 
   return (
@@ -19,7 +22,26 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          {session ? (
+            <>
+              Welcome to <a href="https://nextjs.org">Next.js!</a>
+              <Button
+                onClick={() => {
+                  void signOut()
+                }}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={() => {
+                void signIn()
+              }}
+            >
+              Sign In
+            </Button>
+          )}
         </h1>
 
         <p className={styles.description}>
