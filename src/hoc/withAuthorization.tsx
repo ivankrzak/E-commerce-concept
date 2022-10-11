@@ -19,9 +19,8 @@ export const withAuthorization =
       const { data: session, status } = useSession()
       const router = useRouter()
       const isLoading = status === 'loading'
-
       const isRouteForbidden =
-        userRole !== undefined && session?.userRole !== userRole
+        userRole !== undefined && session?.user.userRole !== userRole
 
       useEffect(() => {
         void (() => {
@@ -29,6 +28,8 @@ export const withAuthorization =
             if (!session) {
               void signIn()
             } else if (isRouteForbidden) {
+              console.log('session', session)
+
               void router.replace(Route.FrontPage())
             }
           }

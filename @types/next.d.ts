@@ -1,4 +1,5 @@
 // next.d.ts
+import { UserRole } from 'api/generated/resolvers-types'
 import type { NextPage } from 'next'
 import type { Router } from 'next/dist/client/router'
 import type { NextComponentType } from 'next/dist/next-server/lib/utils'
@@ -9,11 +10,17 @@ declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
+
+  interface User {
+    email: string
+    name: string
+    image: string
+    userRole: UserRole | null
+  }
   interface Session {
     expires: string
-    user: string
+    user: User
     userId: string
-    userRole: string
   }
 }
 declare module 'next' {
