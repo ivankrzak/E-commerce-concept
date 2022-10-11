@@ -4,3 +4,15 @@ query Products {
     name
   }
 }
+
+mutation CreateProduct($input: CreateProductInput!) {
+  createProduct(input: $input) {
+    name
+  }
+}
+
+mutation CreateProductVariant($input: CreateProductVariantInput!) {
+  createProductVariant(input: $input) {
+    sku
+  }
+}

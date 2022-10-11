@@ -1,6 +1,7 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import Prisma from 'api/prisma/client'
 import { scryptSync, timingSafeEqual } from 'crypto'
+import { UserRole } from 'generated/generated-graphql'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GitHubProvider from 'next-auth/providers/github'
@@ -48,6 +49,16 @@ export default NextAuth({
         token.userRole = user.role
       }
       return token
+    },
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async session({ session, token }) {
+      // eslint-disable-next-line no-param-reassign
+      if (token.userRole) {
+        // eslint-disable-next-line no-param-reassign
+        session.user.userRole = token?.userRole as UserRole
+      }
+
+      return session
     },
   },
 })
