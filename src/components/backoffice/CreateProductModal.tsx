@@ -19,6 +19,7 @@ import {
   useCreateProductMutation,
 } from 'generated/generated-graphql'
 import * as z from 'zod'
+import { FormFileInput } from './Inputs/FileUpload'
 import { FormSelect } from './Inputs/Select'
 import { FormTextarea } from './Inputs/Textarea'
 import { FormTextInput } from './Inputs/TextInput'
@@ -29,6 +30,7 @@ enum FieldName {
   ShortDescription = 'shortDescription',
   Description = 'description',
   CategoryId = 'categoryId',
+  TitleImage = 'titleImage',
 }
 
 enum FormLabel {
@@ -37,6 +39,7 @@ enum FormLabel {
   ShortDescription = 'Short Description',
   Description = 'Description',
   Category = 'Category',
+  TitleImage = 'Title Image',
 }
 
 enum FormPlaceholder {
@@ -53,6 +56,7 @@ type FormValues = {
   [FieldName.ShortDescription]: string
   [FieldName.Description]: string
   [FieldName.CategoryId]: number | null
+  [FieldName.TitleImage]: File | null
 }
 
 interface CreateProductModalProps extends Omit<ModalProps, 'children'> {
@@ -66,11 +70,12 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
   ...rest
 }) => {
   const createPoductValidationSchema = z.object({
-    [FieldName.Slug]: z.string().min(1, { message: 'Required' }),
+    [FieldName.Slug]: z.string(),
     [FieldName.Name]: z.string().min(5),
     [FieldName.ShortDescription]: z.string(),
     [FieldName.Description]: z.string(),
     [FieldName.CategoryId]: z.string(),
+    [FieldName.TitleImage]: z.string(),
   })
 
   const methods = useForm<FormValues>({
@@ -80,22 +85,27 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
       [FieldName.ShortDescription]: '',
       [FieldName.Description]: '',
       [FieldName.CategoryId]: null,
+      [FieldName.TitleImage]: null,
     },
     resolver: zodResolver(createPoductValidationSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
-
   const { data: categoryData } = useCategoriesQuery()
   const [createNewProduct] = useCreateProductMutation()
 
-  const submit = ({
+  const submit = async ({
     slug,
     name,
     shortDescription,
     description,
     categoryId,
+    titleImage,
   }: FormValues) => {
+    if (titleImage) {
+      console.log('titleImage', titleImage)
+      // Add Upload funcionality and get file location
+    }
     const createProduct = async () => {
       await createNewProduct({
         variables: {
@@ -118,8 +128,9 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
   }
   const { categories } = categoryData
   const formErrors = methods.formState.errors
+
   return (
-    <Modal blockScrollOnMount isCentered {...rest} onClose={onClose}>
+    <Modal {...rest} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader
@@ -139,6 +150,11 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
               style={{ width: '100%' }}
               onSubmit={methods.handleSubmit(submit)}
             >
+              <FormFileInput
+                id={FieldName.TitleImage}
+                label={FormLabel.TitleImage}
+                errorMessage={formErrors.titleImage?.message}
+              />
               <FormTextInput
                 id={FieldName.Slug}
                 label={FormLabel.Slug}
