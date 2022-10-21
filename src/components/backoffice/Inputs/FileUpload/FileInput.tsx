@@ -5,11 +5,11 @@ export const KIB_IN_BYTES = 1024
 
 export interface FileInputProps extends Omit<InputProps, 'value'> {
   id: string
-  value?: File
+  value?: FileList
   fileCountLimit?: number
   fileSizeLimitInMiB?: number
   acceptedFileTypes?: string
-  onValueChange: (value: File) => void
+  onValueChange: (value: FileList) => void
 }
 
 const FileInput = React.forwardRef<
@@ -56,7 +56,7 @@ const FileInput = React.forwardRef<
             // }
             // console.log(e.target.files[0])
             // reader.readAsDataURL(e.target.files[0])
-            onValueChange(e.target.files[0])
+            onValueChange(e.target.files)
           }}
           type="file"
           display="none"

@@ -21,7 +21,7 @@ interface FormFileInputProps extends FileInputProps {
   inputWidth?: LayoutProps['w']
 }
 
-const FormFileInput = ({
+const FormImageInput = ({
   id,
   errorMessage,
   label,
@@ -41,7 +41,7 @@ const FormFileInput = ({
       name={id}
       control={control}
       render={({ field }) => {
-        const { value }: { value: File | undefined } = field
+        const { value }: { value: FileList | undefined } = field
 
         // Create Util for this
         if (value) {
@@ -51,7 +51,7 @@ const FormFileInput = ({
               setPreviewImage(reader.result)
             }
           }
-          reader.readAsDataURL(value)
+          reader.readAsDataURL(value[0])
         }
         return (
           <>
@@ -121,4 +121,4 @@ const FormFileInput = ({
   )
 }
 
-export default FormFileInput
+export default FormImageInput

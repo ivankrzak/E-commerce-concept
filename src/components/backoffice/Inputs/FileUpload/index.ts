@@ -1,4 +1,4 @@
 import FileInput from './FileInput'
-import FormFileInput from './FormFileInput'
+import FormImageInput from './FormImageInput'
 
-export { FileInput, FormFileInput }
+export { FileInput, FormImageInput }
