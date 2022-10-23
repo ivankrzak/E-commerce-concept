@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Text,
 } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -18,8 +19,13 @@ import {
   useCategoriesQuery,
   useCreateProductMutation,
 } from 'generated/generated-graphql'
+import {
+  CdnBucket,
+  UploadFileResponse,
+  useUploadFiles,
+} from 'hooks/useUploadFiles'
 import * as z from 'zod'
-import { FormFileInput } from './Inputs/FileUpload'
+import FormImageInput from './Inputs/FileUpload/FormImageInput'
 import { FormSelect } from './Inputs/Select'
 import { FormTextarea } from './Inputs/Textarea'
 import { FormTextInput } from './Inputs/TextInput'
@@ -56,8 +62,13 @@ type FormValues = {
   [FieldName.ShortDescription]: string
   [FieldName.Description]: string
   [FieldName.CategoryId]: number | null
-  [FieldName.TitleImage]: File | null
+  [FieldName.TitleImage]: FileList | null
 }
+
+// type UploadFileResponse = File &
+//   {
+//     fileUrl: string
+//   }[]
 
 interface CreateProductModalProps extends Omit<ModalProps, 'children'> {
   onSuccess?: () => void
@@ -75,7 +86,8 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
     [FieldName.ShortDescription]: z.string(),
     [FieldName.Description]: z.string(),
     [FieldName.CategoryId]: z.string(),
-    [FieldName.TitleImage]: z.string(),
+    // TODO add proper file validation
+    [FieldName.TitleImage]: z.any(),
   })
 
   const methods = useForm<FormValues>({
@@ -93,6 +105,7 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
   })
   const { data: categoryData } = useCategoriesQuery()
   const [createNewProduct] = useCreateProductMutation()
+  const { uploadFiles, error: fileUploadError } = useUploadFiles()
 
   const submit = async ({
     slug,
@@ -102,25 +115,35 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
     categoryId,
     titleImage,
   }: FormValues) => {
+    let uploadedFiles: void | UploadFileResponse
     if (titleImage) {
-      console.log('titleImage', titleImage)
-      // Add Upload funcionality and get file location
-    }
-    const createProduct = async () => {
-      await createNewProduct({
-        variables: {
-          input: {
-            slug,
-            name,
-            shortDescription: shortDescription || null,
-            description: description || null,
-            categoryId: Number(categoryId),
-          },
-        },
+      uploadedFiles = await uploadFiles({
+        fileList: titleImage,
+        bucket: CdnBucket.PRODUCTS,
+        path: 'test',
       })
     }
 
-    return createProduct()
+    if (!fileUploadError) {
+      const createProduct = async () => {
+        await createNewProduct({
+          variables: {
+            input: {
+              slug,
+              name,
+              shortDescription: shortDescription || null,
+              description: description || null,
+              categoryId: Number(categoryId),
+              ...(uploadedFiles && { titleImage: uploadedFiles[0].fileUrl }),
+            },
+          },
+        })
+      }
+
+      return createProduct()
+    }
+    // Add error toast
+    return null
   }
 
   if (!categoryData) {
@@ -150,7 +173,7 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
               style={{ width: '100%' }}
               onSubmit={methods.handleSubmit(submit)}
             >
-              <FormFileInput
+              <FormImageInput
                 id={FieldName.TitleImage}
                 label={FormLabel.TitleImage}
                 errorMessage={formErrors.titleImage?.message}
@@ -198,6 +221,7 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
                   }
                 })}
               />
+              {fileUploadError && <Text color="red">{fileUploadError}</Text>}
               <Button type="submit">Create</Button>
             </form>
           </FormProvider>
