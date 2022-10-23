@@ -318,7 +318,7 @@ export type CreateProductMutationVariables = Exact<{
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', createProduct?: { __typename?: 'Product', name: string } | null };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct?: { __typename?: 'Product', slug: string, name: string, shortDescription?: string | null, description?: string | null, titleImage?: string | null } | null };
 
 export type CreateProductVariantMutationVariables = Exact<{
   input: CreateProductVariantInput;
@@ -409,7 +409,11 @@ export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQuer
 export const CreateProductDocument = gql`
     mutation CreateProduct($input: CreateProductInput!) {
   createProduct(input: $input) {
+    slug
     name
+    shortDescription
+    description
+    titleImage
   }
 }
     `;

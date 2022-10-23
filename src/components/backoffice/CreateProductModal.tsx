@@ -104,8 +104,10 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
     reValidateMode: 'onChange',
   })
   const { data: categoryData } = useCategoriesQuery()
-  const [createNewProduct, { loading: isProductCreationPending }] =
-    useCreateProductMutation()
+  const [
+    createNewProduct,
+    { data: newProductData, loading: isProductCreationPending },
+  ] = useCreateProductMutation()
   const {
     uploadFiles,
     error: fileUploadError,
@@ -157,7 +159,7 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
   }
   const { categories } = categoryData
   const formErrors = methods.formState.errors
-
+  console.log(newProductData)
   return (
     <Modal {...rest} onClose={onClose}>
       <ModalOverlay />
