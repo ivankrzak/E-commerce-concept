@@ -17,6 +17,8 @@ type FormDataProps = {
   }
 }
 
+// TODO check if temporary file is deleted after CDN upload , if not create clean up function
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const processedData = await new Promise<FormDataProps | undefined>(
     (resolve, reject) => {
@@ -35,9 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   ).catch((e) => {
     console.log(e)
   })
-
   console.log(processedData)
-
   if (processedData && processedData.files?.length) {
     const url = process.env.BUNNY_CDN_URL!
     try {
