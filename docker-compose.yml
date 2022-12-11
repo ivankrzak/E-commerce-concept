@@ -6,7 +6,7 @@ services:
     image: mysql
     restart: always
     ports:
-      - '5445:3306'
+      - '5455:3306'
     environment:
       MYSQL_ROOT_PASSWORD: prisma
     volumes:

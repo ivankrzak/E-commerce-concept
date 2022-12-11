@@ -6,9 +6,9 @@ import { SideBar } from 'components/backoffice/layout/SideBar'
 
 const BackOfficeAuthLayout: React.FC = ({ children }) => {
   const {
-    isOpen: isDeleteTenderModalOpen,
-    onOpen: onDeleteTenderModalOpen,
-    onClose: onDeleteTenderModalClose,
+    isOpen: isCreateProductModalOpen,
+    onOpen: onCreateProductModalOpen,
+    onClose: onCreateProductModalClose,
   } = useDisclosure()
 
   return (
@@ -19,15 +19,15 @@ const BackOfficeAuthLayout: React.FC = ({ children }) => {
           {children}
           <Button
             onClick={() => {
-              onDeleteTenderModalOpen()
+              onCreateProductModalOpen()
             }}
           >
             Create Product
           </Button>
         </Container>
         <CreateProductModal
-          isOpen={isDeleteTenderModalOpen}
-          onClose={onDeleteTenderModalClose}
+          isOpen={isCreateProductModalOpen}
+          onClose={onCreateProductModalClose}
         />
       </Flex>
     </Flex>
