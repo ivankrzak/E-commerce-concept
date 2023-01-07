@@ -4,15 +4,9 @@ import {
   ToastId,
   UseToastOptions,
 } from '@chakra-ui/react'
-import { createBreakpoints, Styles } from '@chakra-ui/theme-tools'
+import { mode, StyleFunctionProps, Styles } from '@chakra-ui/theme-tools'
 import * as Components from './components'
-import {
-  BASE_FONT_SIZE_PX,
-  DeviceBreakpoints,
-  HEADER_HEIGHT_PX,
-} from './constants'
-
-const Breakpoints = createBreakpoints(DeviceBreakpoints)
+import { BASE_FONT_SIZE_PX, Colors } from './constants'
 
 export interface UseToastReturn {
   (options?: UseToastOptions): string | number | undefined
@@ -35,9 +29,8 @@ export interface UseToastReturn {
   ): void
   isActive: (id: ToastId) => boolean | undefined
 }
-
 export const GlobalStyles: Styles = {
-  global: {
+  global: (props: StyleFunctionProps) => ({
     '#__next': {
       height: '100%',
     },
@@ -49,31 +42,30 @@ export const GlobalStyles: Styles = {
       height: '6px',
     },
     '::-webkit-scrollbar-track': {
-      backgroundColor: 'brand.ghostWhite',
+      backgroundColor: 'backoffice.wildBlueYonder',
       borderRadius: '6px',
     },
     '::-webkit-scrollbar-track:hover': {
-      backgroundColor: 'brand.ghostWhite',
+      backgroundColor: 'backoffice.wildBlueYonder',
     },
     '::-webkit-scrollbar-thumb': {
-      backgroundColor: 'brand.purpleNavy',
+      backgroundColor: 'backoffice.ebony',
       borderRadius: '4px',
     },
     '::-webkit-scrollbar-thumb:hover': {
-      backgroundColor: 'brand.darkBlueGray',
+      backgroundColor: 'backoffice.primary',
     },
     '*': {
-      scrollbarColor: 'brand.purpleNavy brand.ghostWhite',
+      scrollbarColor: 'backoffice.wildBlueYonder backoffice.ghostWhite',
       scrollbarWidth: 'thin',
     },
     '::selection': {
       color: 'white',
-      backgroundColor: 'brand.purpleNavy',
+      backgroundColor: 'backoffice.primary',
     },
     html: {
       fontSize: BASE_FONT_SIZE_PX,
       scrollBehavior: 'smooth',
-      scrollPaddingTop: HEADER_HEIGHT_PX,
     },
     body: {
       height: '100vh',
@@ -81,18 +73,20 @@ export const GlobalStyles: Styles = {
       minWidth: '320px',
       fontFamily: 'Space Grotesk',
       fontSize: '14px',
+      bg: mode('backoffice.ghostWhite', 'backoffice.deepPurple')(props),
+      color: mode('backoffice.deepPurple', 'backoffice.ghostWhite')(props),
     },
     'body *': {
       fontFamily: 'Space Grotesk',
     },
     '*::placeholder': {
-      color: 'brand.wildBlueYonder',
+      color: 'backoffice.wildBlueYonder',
       textTransform: 'uppercase',
-      fontSize: 14,
+      fontSize: '14px',
       opacity: 1,
     },
     '*, *::before, &::after': {
-      borderColor: 'brand.ultramarine',
+      borderColor: 'backoffice.primary',
     },
     'a, button': {
       touchAction: 'manipulation',
@@ -103,15 +97,17 @@ export const GlobalStyles: Styles = {
     pre: {
       tabSize: 2,
     },
-  },
+  }),
 }
 
 const CustomTheme = {
+  colors: {
+    ...Colors,
+  },
   config: {
-    initialColorMode: 'light',
+    initialColorMode: 'system',
     useSystemColorMode: false,
   },
-  breakpoints: Breakpoints,
   styles: GlobalStyles,
   sizes: {
     container: {
@@ -119,9 +115,9 @@ const CustomTheme = {
       xl: '1296px',
     },
   },
-  // components: {
-  //   ...Components,
-  // },
+  components: {
+    ...Components,
+  },
 }
 
 // Due to chakra TS theme generating script
