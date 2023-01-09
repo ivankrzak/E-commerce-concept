@@ -1,12 +1,12 @@
 import { createIcon } from '@chakra-ui/react'
 
-export const StockUpIcon = createIcon({
-  displayName: 'StockUpIcon',
-  viewBox: '0 0 20 12',
+export const BackArrowIcon = createIcon({
+  displayName: 'BackArrowIcon',
+  viewBox: '0 0 14 14',
   path: [
     <path
       key="path1"
-      d="M19.1674 1.151L11.2501 9.06834L7.08305 4.90132L0.83252 11.1519"
+      d="M12.5219 7.16016H0.854248"
       stroke="currentColor"
       fill="none"
       strokeWidth="1.66678"
@@ -15,7 +15,7 @@ export const StockUpIcon = createIcon({
     />,
     <path
       key="path2"
-      d="M14.1667 1.15088H19.1678V6.15188"
+      d="M6.68808 12.9941L0.854248 7.16025L6.68808 1.32642"
       stroke="currentColor"
       fill="none"
       strokeWidth="1.66678"
