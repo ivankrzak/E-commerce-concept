@@ -1,3 +1,4 @@
+export * from './BackArrowIcon'
 export * from './DownArrowIcon'
 export * from './GridIcon'
 export * from './HomeIcon'

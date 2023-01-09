@@ -60,9 +60,16 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       {label && subLabel && (
         <VStack spacing={0} alignItems="start">
           <HStack>
-            <Text fontSize="13px">{label}</Text>
+            <Text
+              fontFamily="Space Grotesk Medium"
+              fontSize="14px"
+              color="backoffice.primary"
+              _dark={{ color: 'backoffice.wildBlueYonder' }}
+            >
+              {label}
+            </Text>
           </HStack>
-          <Text color="brand.wildBlueYonder" fontSize="13px">
+          <Text pl="4px" color="brand.wildBlueYonder" fontSize="13px">
             {subLabel}
           </Text>
         </VStack>
