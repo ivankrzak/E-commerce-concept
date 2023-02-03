@@ -15,29 +15,71 @@ const Product: QueryResolvers = {
       context.prisma.product.findMany({
         include: { category: true, variants: true },
       }),
+    productBySlug: async (
+      _parent: unknown,
+      args: { slug: string },
+      context: IPrismaContext
+    ) =>
+      context.prisma.product.findUnique({
+        where: { slug: args.slug },
+        include: {
+          category: true,
+          variants: {
+            include: { color: true, size: true },
+          },
+        },
+      }),
   },
   Mutation: {
     createProduct: async (
       _parent: unknown,
       args: { input: CreateProductInput },
       context: IPrismaContext
-    ) =>
-      context.prisma.product.create({
+    ) => {
+      const { variants, ...baseProductInfo } = args.input
+
+      return context.prisma.product.create({
         data: {
-          ...args.input,
+          ...baseProductInfo,
+          ...(variants && { variants: { create: [...variants] } }),
         },
-      }),
+      })
+    },
     updateProduct: async (
       _parent: unknown,
       args: { input: UpdateProductInput; productId: number },
       context: IPrismaContext
-    ) =>
-      context.prisma.product.update({
+    ) => {
+      const { variants, syncVariantPrices, syncedPrices, ...baseProductInfo } =
+        args.input
+
+      if (syncVariantPrices && syncedPrices) {
+        await context.prisma.productVariant.updateMany({
+          where: { productId: args.productId },
+          data: {
+            price: syncedPrices.price,
+            ...(syncedPrices.salePrice && {
+              salePrice: syncedPrices.salePrice,
+            }),
+          },
+        })
+      }
+
+      return context.prisma.product.update({
         where: { id: args.productId },
         data: {
-          ...args.input,
+          ...baseProductInfo,
+          ...(variants && {
+            variants: {
+              update: {
+                where: { id: variants?.[0]?.id },
+                data: { ...variants[0] },
+              },
+            },
+          }),
         },
-      }),
+      })
+    },
     deleteProduct: async (
       _parent: unknown,
       args: { productId: number },

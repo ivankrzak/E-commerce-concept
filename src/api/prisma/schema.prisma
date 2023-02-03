@@ -14,18 +14,21 @@ datasource db {
 }
 
 model Product {
-  id               Int              @id @default(autoincrement())
-  slug             String           @unique
-  name             String           @unique
-  shortDescription String?          @db.VarChar(50)
-  description      String?          @db.LongText
-  categoryId       Int?
-  titleImage       String?
-  isActive         Boolean          @default(true)
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  category         Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  variants         ProductVariant[]
+  id                      Int              @id @default(autoincrement())
+  slug                    String           @unique
+  name                    String           @unique
+  shortDescription        String?          @db.VarChar(50)
+  description             String?          @db.LongText
+  categoryId              Int?
+  titleImageUrl           String?
+  isActive                Boolean          @default(true)
+  allowOutOfStockPurchase Boolean          @default(false)
+  isDigital               Boolean          @default(false)
+  syncVariantPrices       Boolean          @default(true)
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  category                Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  variants                ProductVariant[]
 }
 
 model Category {
@@ -50,6 +53,7 @@ model ProductVariant {
   sizeId       Int?
   price        Int
   salePrice    Int?
+  isOnSale     Boolean       @default(false)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   color        ProductColor? @relation(fields: [colorId], references: [id])

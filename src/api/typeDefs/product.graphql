@@ -11,13 +11,18 @@ type Product {
   name: String!
   shortDescription: String
   description: String
-  titleImage: String
+  titleImageUrl: String
   categoryId: Int
   isActive: Boolean!
+  allowOutOfStockPurchase: Boolean!
+  isDigital: Boolean!
+  syncVariantPrices: Boolean!
   createdAt: Date!
   updatedAt: Date!
-  variants: [ProductVariant]
-  category: Category
+
+  # relations
+  variants: [ProductVariant!]!
+  category: Category!
 }
 
 input CreateProductInput {
@@ -26,8 +31,16 @@ input CreateProductInput {
   shortDescription: String
   description: String
   categoryId: Int
-  titleImage: String
+  titleImageUrl: String
   isActive: Boolean
+  allowOutOfStockPurchase: Boolean
+  isDigital: Boolean
+  variants: [CreateProductVariantInput!]
+}
+
+input SyncedPricesInput {
+  price: Int!
+  salePrice: Int
 }
 
 input UpdateProductInput {
@@ -36,12 +49,18 @@ input UpdateProductInput {
   shortDescription: String
   description: String
   categoryId: Int
-  titleImage: String
+  titleImageUrl: String
   isActive: Boolean
+  allowOutOfStockPurchase: Boolean
+  isDigital: Boolean
+  syncVariantPrices: Boolean
+  syncedPrices: SyncedPricesInput
+  variants: [UpdateProductVariantInput!]
 }
 
 type Query {
-  products: [Product]! @isAuth(userRoles: [CUSTOMER])
+  products: [Product!]!
+  productBySlug(slug: String!): Product!
 }
 
 type Mutation {

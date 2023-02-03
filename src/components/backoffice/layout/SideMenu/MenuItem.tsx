@@ -1,8 +1,7 @@
-import React, { ReactNode, useState } from 'react'
-import { Text, VStack } from '@chakra-ui/react'
+import React, { ReactNode } from 'react'
+import { VStack } from '@chakra-ui/react'
 import { motion, Variants } from 'framer-motion'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { NextLink } from 'components/backoffice/common/NextLink'
 import { MenuButton } from './MenuButton'
 
 const ItemVariants: Variants = {
@@ -23,16 +22,19 @@ interface SubMenuItem {
 interface MenuItemProps {
   icon?: ReactNode
   label: string
+  isSelected: boolean
   routeTo?: string
   subMenu?: SubMenuItem[]
 }
 
-export const MenuItem = ({ icon, label, routeTo, subMenu }: MenuItemProps) => {
-  const router = useRouter()
-
-  const [isSelected, setIsSelected] = useState(router.pathname === routeTo)
-
-  return !routeTo ? (
+export const MenuItem = ({
+  icon,
+  label,
+  routeTo,
+  subMenu,
+  isSelected,
+}: MenuItemProps) =>
+  !routeTo ? (
     <motion.div
       initial={false}
       animate={isSelected ? 'open' : 'closed'}
@@ -51,7 +53,6 @@ export const MenuItem = ({ icon, label, routeTo, subMenu }: MenuItemProps) => {
           label={label}
           isSelected={isSelected}
           icon={icon}
-          onClick={() => setIsSelected(!isSelected)}
           hasDropdownIndicator
         />
       </motion.button>
@@ -82,24 +83,25 @@ export const MenuItem = ({ icon, label, routeTo, subMenu }: MenuItemProps) => {
       >
         <VStack spacing="8px">
           {subMenu?.map((menuItem) => (
-            <motion.div variants={ItemVariants}>
-              <Link href={menuItem.routeTo}>
-                <Text
-                  fontFamily="Space Grotesk Light"
-                  fontSize="16px"
-                  cursor="pointer"
-                >
-                  {menuItem.label}
-                </Text>
-              </Link>
+            <motion.div key={menuItem.label} variants={ItemVariants}>
+              <NextLink
+                href={menuItem.routeTo}
+                fontFamily="Space Grotesk Light"
+                fontSize="16px"
+                cursor="pointer"
+              >
+                {menuItem.label}
+              </NextLink>
             </motion.div>
           ))}
         </VStack>
       </motion.div>
     </motion.div>
   ) : (
-    <Link href={routeTo}>
-      <MenuButton label={label} isSelected={isSelected} icon={icon} />
-    </Link>
+    <MenuButton
+      label={label}
+      isSelected={isSelected}
+      icon={icon}
+      routeTo={routeTo}
+    />
   )
-}

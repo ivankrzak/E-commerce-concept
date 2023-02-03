@@ -3,5 +3,7 @@ query Categories {
     id
     name
     parentCategoryId
+    createdAt
+    updatedAt
   }
 }

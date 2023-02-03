@@ -17,6 +17,7 @@ import {
 } from 'chakra-react-select'
 import { useIsOnTouchscreen } from 'hooks/useIsOnTouchscreen'
 import { transparentize } from 'polished'
+import * as yup from 'yup'
 import { z } from 'zod'
 import { Colors } from 'theme/constants'
 import { ExplanatoryTooltip } from 'components/backoffice/common/ExplanatoryTooltip'
@@ -31,6 +32,11 @@ export const ZodDropdownOption = z.object({
   value: z.number().nullable(),
 })
 
+export const YupDropdownOption = yup.object({
+  label: yup.string(),
+  value: yup.number(),
+})
+
 export interface DropdownProps extends Omit<ChakraSelectProps, 'onChange'> {
   id: string
   options: DropdownOption[]
@@ -40,7 +46,6 @@ export interface DropdownProps extends Omit<ChakraSelectProps, 'onChange'> {
   tooltip?: string
   rightElement?: ReactElement
   hasInputInRightElement?: boolean
-  isRightELement?: boolean
   labelDirection?: StackDirection
   hint?: string
   width?: LayoutProps['width']
@@ -63,7 +68,6 @@ export const Dropdown = forwardRef<HTMLSelectElement, DropdownProps>(
       isDisabled,
       onChange,
       rightElement,
-      isRightELement = false,
       hasInputInRightElement = false,
       tooltip,
       width = 'full',

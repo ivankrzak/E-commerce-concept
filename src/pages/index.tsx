@@ -1,13 +1,15 @@
-import { Button } from '@chakra-ui/react'
+import { Box, Button, Text, useColorMode } from '@chakra-ui/react'
 import { useProductsQuery } from 'generated/generated-graphql'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { TextInput } from 'components/backoffice/Inputs/TextInput'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   const { data: session } = useSession()
+  const { colorMode, toggleColorMode } = useColorMode()
   const { data } = useProductsQuery()
   console.log('session', session)
   console.log(data)
@@ -26,6 +28,8 @@ const Home: NextPage = () => {
             <>
               Welcome to <a href="https://nextjs.org">Next.js!</a>
               <Button
+                size="lg"
+                variant="outline"
                 onClick={() => {
                   void signOut()
                 }}
@@ -47,7 +51,18 @@ const Home: NextPage = () => {
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.tsx</code>
+          <Button onClick={toggleColorMode}>
+            Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+          </Button>
         </p>
+        <Box w="500px">
+          <TextInput
+            id="test"
+            label="Test input"
+            placeholder="Type Something"
+          />
+        </Box>
+        <Text color="state.error">Test colors</Text>
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>

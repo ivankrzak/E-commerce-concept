@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Flex, useColorMode, VStack } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import {
   GridIcon,
   HomeIcon,
@@ -12,6 +13,7 @@ import { MenuItem } from './MenuItem'
 
 export const SideMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode()
+  const { pathname } = useRouter()
 
   return (
     <Flex left={0} top={0} direction="column" w="240px" h="100vh">
@@ -21,6 +23,7 @@ export const SideMenu = () => {
           label="Dashboard"
           routeTo="/backoffice"
           icon={<HomeIcon w="20px" />}
+          isSelected={pathname === '/backoffice'}
         />
         <MenuItem
           label="Orders"
@@ -30,11 +33,13 @@ export const SideMenu = () => {
             { label: 'In Progress', routeTo: '/' },
             { label: 'Completed', routeTo: '/' },
           ]}
+          isSelected={pathname === '/orders'}
         />
         <MenuItem
           label="Products"
           icon={<GridIcon w="20px" />}
           routeTo="/backoffice/products"
+          isSelected={pathname === '/backoffice/products'}
           //   subMenu={[
           //     { label: 'Products', routeTo: '/' },
           //     { label: 'Categories', routeTo: '/' },
@@ -49,12 +54,19 @@ export const SideMenu = () => {
             { label: 'Categories', routeTo: '/' },
             { label: 'Options', routeTo: '/' },
           ]}
+          isSelected={pathname === '/orders'}
         />
-        <MenuItem icon={<UsersIcon w="20px" />} label="Customers" routeTo="/" />
+        <MenuItem
+          icon={<UsersIcon w="20px" />}
+          label="Customers"
+          routeTo="/"
+          isSelected={pathname === '/orders'}
+        />
         <MenuItem
           icon={<SettingsIcon w="20px" />}
           label="Settings"
           routeTo="/"
+          isSelected={pathname === '/orders'}
         />
       </VStack>
       <Button bottom={0} onClick={toggleColorMode}>

@@ -41,13 +41,16 @@ export type CreateProductColorInput = {
 };
 
 export type CreateProductInput = {
+  allowOutOfStockPurchase?: InputMaybe<Scalars['Boolean']>;
   categoryId?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   isActive?: InputMaybe<Scalars['Boolean']>;
+  isDigital?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
   shortDescription?: InputMaybe<Scalars['String']>;
   slug: Scalars['String'];
-  titleImage?: InputMaybe<Scalars['String']>;
+  titleImageUrl?: InputMaybe<Scalars['String']>;
+  variants?: InputMaybe<Array<CreateProductVariantInput>>;
 };
 
 export type CreateProductSizeInput = {
@@ -56,8 +59,9 @@ export type CreateProductSizeInput = {
 
 export type CreateProductVariantInput = {
   colorId?: InputMaybe<Scalars['Int']>;
+  isOnSale?: InputMaybe<Scalars['Boolean']>;
   price: Scalars['Int'];
-  productId: Scalars['Int'];
+  productId?: InputMaybe<Scalars['Int']>;
   quantity: Scalars['Int'];
   salePrice?: InputMaybe<Scalars['Int']>;
   sizeId?: InputMaybe<Scalars['Int']>;
@@ -184,18 +188,21 @@ export type MutationUpdateProductVariantArgs = {
 
 export type Product = {
   __typename?: 'Product';
-  category?: Maybe<Category>;
+  allowOutOfStockPurchase: Scalars['Boolean'];
+  category: Category;
   categoryId?: Maybe<Scalars['Int']>;
   createdAt: Scalars['Date'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   isActive: Scalars['Boolean'];
+  isDigital: Scalars['Boolean'];
   name: Scalars['String'];
   shortDescription?: Maybe<Scalars['String']>;
   slug: Scalars['String'];
-  titleImage?: Maybe<Scalars['String']>;
+  syncVariantPrices: Scalars['Boolean'];
+  titleImageUrl?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Date'];
-  variants?: Maybe<Array<Maybe<ProductVariant>>>;
+  variants: Array<ProductVariant>;
 };
 
 export type ProductColor = {
@@ -230,6 +237,7 @@ export type ProductVariant = {
   colorId?: Maybe<Scalars['Int']>;
   createdAt: Scalars['Date'];
   id: Scalars['Int'];
+  isOnSale: Scalars['Boolean'];
   price: Scalars['Int'];
   product?: Maybe<Product>;
   productId: Scalars['Int'];
@@ -237,7 +245,7 @@ export type ProductVariant = {
   salePrice?: Maybe<Scalars['Int']>;
   size?: Maybe<ProductSize>;
   sizeId?: Maybe<Scalars['Int']>;
-  sku?: Maybe<Scalars['Int']>;
+  sku: Scalars['Int'];
   status?: Maybe<ProductStatus>;
   updatedAt: Scalars['Date'];
   variantImage?: Maybe<Scalars['String']>;
@@ -245,17 +253,28 @@ export type ProductVariant = {
 
 export type Query = {
   __typename?: 'Query';
-  categories: Array<Maybe<Category>>;
+  categories: Array<Category>;
   login?: Maybe<Scalars['Boolean']>;
-  productColors?: Maybe<Array<Maybe<ProductColor>>>;
-  productSizes?: Maybe<Array<Maybe<ProductSize>>>;
+  productBySlug: Product;
+  productColors?: Maybe<Array<ProductColor>>;
+  productSizes?: Maybe<Array<ProductSize>>;
   productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
-  products: Array<Maybe<Product>>;
+  products: Array<Product>;
 };
 
 
 export type QueryLoginArgs = {
   input: LoginInput;
+};
+
+
+export type QueryProductBySlugArgs = {
+  slug: Scalars['String'];
+};
+
+export type SyncedPricesInput = {
+  price: Scalars['Int'];
+  salePrice?: InputMaybe<Scalars['Int']>;
 };
 
 export type UpdateCategoryInput = {
@@ -269,13 +288,18 @@ export type UpdateProductColorInput = {
 };
 
 export type UpdateProductInput = {
+  allowOutOfStockPurchase?: InputMaybe<Scalars['Boolean']>;
   categoryId?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   isActive?: InputMaybe<Scalars['Boolean']>;
+  isDigital?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   shortDescription?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
-  titleImage?: InputMaybe<Scalars['String']>;
+  syncVariantPrices?: InputMaybe<Scalars['Boolean']>;
+  syncedPrices?: InputMaybe<SyncedPricesInput>;
+  titleImageUrl?: InputMaybe<Scalars['String']>;
+  variants?: InputMaybe<Array<UpdateProductVariantInput>>;
 };
 
 export type UpdateProductSizeInput = {
@@ -284,6 +308,8 @@ export type UpdateProductSizeInput = {
 
 export type UpdateProductVariantInput = {
   colorId?: InputMaybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  isOnSale?: InputMaybe<Scalars['Boolean']>;
   price?: InputMaybe<Scalars['Int']>;
   quantity?: InputMaybe<Scalars['Int']>;
   salePrice?: InputMaybe<Scalars['Int']>;
@@ -394,6 +420,7 @@ export type ResolversTypes = ResolversObject<{
   ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversTypes['ProductColor']>, product?: Maybe<ResolversTypes['Product']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  SyncedPricesInput: SyncedPricesInput;
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateProductColorInput: UpdateProductColorInput;
   UpdateProductInput: UpdateProductInput;
@@ -423,6 +450,7 @@ export type ResolversParentTypes = ResolversObject<{
   ProductVariant: Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversParentTypes['ProductColor']>, product?: Maybe<ResolversParentTypes['Product']>, size?: Maybe<ResolversParentTypes['ProductSize']> };
   Query: {};
   String: Scalars['String'];
+  SyncedPricesInput: SyncedPricesInput;
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateProductColorInput: UpdateProductColorInput;
   UpdateProductInput: UpdateProductInput;
@@ -473,18 +501,21 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
 }>;
 
 export type ProductResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = ResolversObject<{
-  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
+  allowOutOfStockPurchase?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  category?: Resolver<ResolversTypes['Category'], ParentType, ContextType>;
   categoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isDigital?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   shortDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  titleImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  syncVariantPrices?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  titleImageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
-  variants?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>>, ParentType, ContextType>;
+  variants?: Resolver<Array<ResolversTypes['ProductVariant']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -512,6 +543,7 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
   colorId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isOnSale?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
   productId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -519,7 +551,7 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
   salePrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   size?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType>;
   sizeId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sku?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  sku?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ProductStatus']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   variantImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -527,12 +559,13 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
 }>;
 
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  categories?: Resolver<Array<Maybe<ResolversTypes['Category']>>, ParentType, ContextType>;
+  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   login?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
-  productColors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductColor']>>>, ParentType, ContextType>;
-  productSizes?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSize']>>>, ParentType, ContextType>;
+  productBySlug?: Resolver<ResolversTypes['Product'], ParentType, ContextType, RequireFields<QueryProductBySlugArgs, 'slug'>>;
+  productColors?: Resolver<Maybe<Array<ResolversTypes['ProductColor']>>, ParentType, ContextType>;
+  productSizes?: Resolver<Maybe<Array<ResolversTypes['ProductSize']>>, ParentType, ContextType>;
   productVariants?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>>, ParentType, ContextType>;
-  products?: Resolver<Array<Maybe<ResolversTypes['Product']>>, ParentType, ContextType>;
+  products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{

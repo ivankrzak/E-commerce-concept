@@ -1,10 +1,12 @@
 import React, { ReactNode } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { DownArrowIcon } from 'components/backoffice/Icons'
 
 interface MenuButtonProps {
   label: string
+  routeTo?: string
   isSelected?: boolean
   hasDropdownIndicator?: boolean
   icon?: ReactNode
@@ -16,6 +18,7 @@ export const MenuButton = ({
   label,
   isSelected,
   hasDropdownIndicator = false,
+  routeTo,
   onClick,
 }: MenuButtonProps) => (
   <Flex
@@ -36,17 +39,34 @@ export const MenuButton = ({
     cursor="pointer"
   >
     {icon && icon}
-    <Text
-      w="full"
-      mx="8px"
-      fontSize="20px"
-      textAlign="left"
-      {...(isSelected && {
-        fontFamily: 'Space Grotesk Medium',
-      })}
-    >
-      {label}
-    </Text>
+    {routeTo ? (
+      <Link href={routeTo} passHref>
+        <Text
+          w="full"
+          mx="8px"
+          fontSize="20px"
+          textAlign="left"
+          {...(isSelected && {
+            fontFamily: 'Space Grotesk Medium',
+          })}
+        >
+          {label}
+        </Text>
+      </Link>
+    ) : (
+      <Text
+        w="full"
+        mx="8px"
+        fontSize="20px"
+        textAlign="left"
+        {...(isSelected && {
+          fontFamily: 'Space Grotesk Medium',
+        })}
+      >
+        {label}
+      </Text>
+    )}
+
     {hasDropdownIndicator && (
       <motion.div
         variants={{
