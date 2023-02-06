@@ -13,6 +13,9 @@ const moduleExports = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return config
   },
+  images: {
+    domains: ['e-commerce-pull-zone.b-cdn.net'],
+  },
 }
 
 module.exports = moduleExports

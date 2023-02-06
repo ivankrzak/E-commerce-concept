@@ -5,18 +5,126 @@ query Products {
   }
 }
 
+query ProductList {
+  products {
+    name
+    isActive
+    id
+    shortDescription
+    slug
+    titleImageUrl
+    updatedAt
+    description
+    allowOutOfStockPurchase
+    isDigital
+    syncVariantPrices
+    createdAt
+    category {
+      name
+    }
+    variants {
+      id
+      size {
+        id
+        value
+      }
+      quantity
+      status
+      isOnSale
+      salePrice
+      price
+    }
+  }
+}
+
+query ProductBySlug($slug: String!) {
+  productBySlug(slug: $slug) {
+    name
+    isActive
+    id
+    shortDescription
+    slug
+    titleImageUrl
+    updatedAt
+    description
+    allowOutOfStockPurchase
+    isDigital
+    syncVariantPrices
+    createdAt
+    category {
+      id
+      name
+    }
+    variants {
+      id
+      productId
+      sku
+      createdAt
+      updatedAt
+      size {
+        id
+        value
+        createdAt
+        updatedAt
+      }
+      color {
+        id
+        name
+        hexValue
+        createdAt
+        updatedAt
+      }
+      quantity
+      status
+      isOnSale
+      salePrice
+      price
+    }
+  }
+}
+
+query ProductOptions {
+  productColors {
+    id
+    name
+    hexValue
+  }
+  productSizes {
+    id
+    value
+  }
+  categories {
+    id
+    name
+    createdAt
+    updatedAt
+    parentCategory {
+      id
+      name
+    }
+  }
+}
+
 mutation CreateProduct($input: CreateProductInput!) {
   createProduct(input: $input) {
     slug
     name
     shortDescription
     description
-    titleImage
+    titleImageUrl
   }
 }
 
 mutation CreateProductVariant($input: CreateProductVariantInput!) {
   createProductVariant(input: $input) {
     sku
+  }
+}
+
+mutation UpdateProduct($input: UpdateProductInput!, $productId: Int!) {
+  updateProduct(input: $input, productId: $productId) {
+    id
+    name
+    slug
   }
 }

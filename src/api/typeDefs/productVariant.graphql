@@ -1,7 +1,7 @@
 type ProductVariant {
   id: Int!
   productId: Int!
-  sku: Int
+  sku: Int!
   quantity: Int!
   variantImage: String
   status: ProductStatus
@@ -9,6 +9,7 @@ type ProductVariant {
   sizeId: Int
   price: Int!
   salePrice: Int
+  isOnSale: Boolean!
   createdAt: Date!
   updatedAt: Date!
   color: ProductColor
@@ -17,7 +18,7 @@ type ProductVariant {
 }
 
 input CreateProductVariantInput {
-  productId: Int!
+  productId: Int
   sku: Int
   quantity: Int!
   price: Int!
@@ -25,10 +26,12 @@ input CreateProductVariantInput {
   status: ProductStatus
   colorId: Int
   sizeId: Int
+  isOnSale: Boolean
   salePrice: Int
 }
 
 input UpdateProductVariantInput {
+  id: Int!
   sku: Int
   quantity: Int
   price: Int
@@ -36,6 +39,7 @@ input UpdateProductVariantInput {
   status: ProductStatus
   colorId: Int
   sizeId: Int
+  isOnSale: Boolean
   salePrice: Int
 }
 
@@ -75,8 +79,8 @@ input UpdateProductSizeInput {
 }
 
 type Query {
-  productColors: [ProductColor]
-  productSizes: [ProductSize]
+  productColors: [ProductColor!]
+  productSizes: [ProductSize!]
   productVariants: [ProductVariant]
 }
 

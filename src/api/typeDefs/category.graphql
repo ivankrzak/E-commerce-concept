@@ -20,7 +20,7 @@ input UpdateCategoryInput {
 }
 
 type Query {
-  categories: [Category]!
+  categories: [Category!]!
 }
 
 type Mutation {

@@ -19,6 +19,7 @@ interface FormFileInputProps extends FileInputProps {
   isWithShowFiles?: boolean
   labelDirection?: StackDirection
   inputWidth?: LayoutProps['w']
+  imageSrc?: string
 }
 
 const FormImageInput = ({
@@ -27,13 +28,14 @@ const FormImageInput = ({
   label,
   inputWidth = 'full',
   labelDirection = 'column',
+  imageSrc,
   ...rest
 }: Omit<FormFileInputProps, 'value' | 'onValueChange'>) => {
   const { control } = useFormContext()
 
-  const [previewImage, setPreviewImage] = useState<
-    string | ArrayBuffer | null
-  >()
+  const [previewImage, setPreviewImage] = useState<string | ArrayBuffer | null>(
+    imageSrc || null
+  )
   const fileInputRef =
     useRef<HTMLInputElement>() as React.MutableRefObject<HTMLInputElement>
   return (
@@ -43,7 +45,7 @@ const FormImageInput = ({
       render={({ field }) => {
         const { value }: { value: FileList | undefined } = field
 
-        // Create Util for this
+        // TODO Create Util for this
         if (value) {
           const reader = new FileReader()
           reader.onload = () => {
