@@ -104,10 +104,8 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
     reValidateMode: 'onChange',
   })
   const { data: categoryData } = useCategoriesQuery()
-  const [
-    createNewProduct,
-    { data: newProductData, loading: isProductCreationPending },
-  ] = useCreateProductMutation()
+  const [createNewProduct, { loading: isProductCreationPending }] =
+    useCreateProductMutation()
   const {
     uploadFiles,
     error: fileUploadError,
