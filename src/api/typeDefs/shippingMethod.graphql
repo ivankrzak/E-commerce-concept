@@ -1,0 +1,10 @@
+type ShippingMethod {
+  id: Int!
+  name: String!
+  price: Int!
+  isActive: Boolean!
+}
+
+type Query {
+  shippingMethods: [ShippingMethod!]!
+}

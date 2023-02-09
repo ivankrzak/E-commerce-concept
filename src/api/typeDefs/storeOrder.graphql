@@ -1,0 +1,64 @@
+enum ShopOrderStatus {
+  NEW
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  SUCCESSFUL
+  AWAITING
+  FAILED
+}
+
+type StoreOrderItems {
+  id: Int!
+  name: String!
+  quantity: Int!
+  price: Int!
+  storeOrderId: Int
+  productVariantId: Int
+  storeOrder: StoreOrder
+  productVariant: ProductVariant
+}
+
+type StoreOrder {
+  id: Int!
+  totalAmount: Int!
+  shippingTrackingNumber: Int
+  notes: Boolean
+  status: ShopOrderStatus!
+  paymentStatus: PaymentStatus!
+  # TODO make required later
+  userId: String
+  paymentMethodId: Int!
+  shippingMethodId: Int!
+  createdAt: Date!
+  updatedAt: Date!
+  user: User
+  paymentMethod: PaymentMethod!
+  shippingMethod: ShippingMethod!
+  storeOrderItems: [StoreOrderItems!]!
+}
+
+input OrderItemInput {
+  productVariantId: Int!
+  quantity: Int!
+}
+
+input CreateOrderInput {
+  userId: String
+  paymentMethodId: Int!
+  shippingMethodId: Int!
+  orderedItems: [OrderItemInput!]!
+  notes: String
+}
+
+type Query {
+  orders: [StoreOrder!]!
+  orderById: StoreOrder!
+}
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): StoreOrder!
+}
