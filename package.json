@@ -7,6 +7,7 @@
     "build": "yarn migrate:deploy && next build",
     "start": "next start --port ${PORT-3000}",
     "lint": "next lint",
+    "migrate:deploy": "prisma migrate deploy",
     "chakra:generate-theme-typings": "chakra-cli tokens theme",
     "ts-node": "ts-node --compiler-options '{\\\"module\\\":\\\"commonjs\\\"}'",
     "graphql:generate-types": "graphql-codegen --config codegen.yml",
