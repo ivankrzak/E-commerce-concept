@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'

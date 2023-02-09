@@ -159,7 +159,6 @@ export const CreateProductModal: React.VFC<CreateProductModalProps> = ({
   }
   const { categories } = categoryData
   const formErrors = methods.formState.errors
-  console.log(newProductData)
   return (
     <Modal {...rest} onClose={onClose}>
       <ModalOverlay />
