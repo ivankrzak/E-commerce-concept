@@ -54,6 +54,11 @@ input CreateOrderInput {
   notes: String
 }
 
+input ChangeOrderStatusInput {
+  orderIds: [Int!]!
+  status: ShopOrderStatus!
+}
+
 type Query {
   orders: [StoreOrder!]!
   orderById: StoreOrder!
@@ -61,4 +66,5 @@ type Query {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): StoreOrder!
+  changeOrderStatus(input: ChangeOrderStatusInput!): Boolean!
 }

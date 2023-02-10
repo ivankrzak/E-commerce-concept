@@ -30,6 +30,11 @@ export type Category = {
   updatedAt: Scalars['Date'];
 };
 
+export type ChangeOrderStatusInput = {
+  orderIds: Array<Scalars['Int']>;
+  status: ShopOrderStatus;
+};
+
 export type CreateCategoryInput = {
   name: Scalars['String'];
   parentCategoryId?: InputMaybe<Scalars['Int']>;
@@ -91,6 +96,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeOrderStatus: Scalars['Boolean'];
   createCategory?: Maybe<Category>;
   createOrder: StoreOrder;
   createProduct?: Maybe<Product>;
@@ -108,6 +114,11 @@ export type Mutation = {
   updateProductColor?: Maybe<ProductColor>;
   updateProductSize?: Maybe<ProductSize>;
   updateProductVariant?: Maybe<ProductVariant>;
+};
+
+
+export type MutationChangeOrderStatusArgs = {
+  input: ChangeOrderStatusInput;
 };
 
 
@@ -485,6 +496,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversTypes['Category']>, products?: Maybe<Array<Maybe<ResolversTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversTypes['Category']>>> }>;
+  ChangeOrderStatusInput: ChangeOrderStatusInput;
   CreateCategoryInput: CreateCategoryInput;
   CreateOrderInput: CreateOrderInput;
   CreateProductColorInput: CreateProductColorInput;
@@ -524,6 +536,7 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Category: Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversParentTypes['Category']>, products?: Maybe<Array<Maybe<ResolversParentTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversParentTypes['Category']>>> };
+  ChangeOrderStatusInput: ChangeOrderStatusInput;
   CreateCategoryInput: CreateCategoryInput;
   CreateOrderInput: CreateOrderInput;
   CreateProductColorInput: CreateProductColorInput;
@@ -578,6 +591,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  changeOrderStatus?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangeOrderStatusArgs, 'input'>>;
   createCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
   createOrder?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType, RequireFields<MutationCreateOrderArgs, 'input'>>;
   createProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'input'>>;

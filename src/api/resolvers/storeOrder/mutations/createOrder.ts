@@ -2,7 +2,6 @@ import { MutationCreateOrderArgs } from 'api/generated/resolvers-types'
 import { IPrismaContext } from 'api/prisma/IPrismaContext'
 import { ValidationError } from 'api/utils/graphqlErrors'
 import { sum } from 'lodash'
-import { idText } from 'typescript'
 
 export const createOrder = async (
   _parent: unknown,
