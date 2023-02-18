@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react'
 import { mode, StyleFunctionProps, Styles } from '@chakra-ui/theme-tools'
 import * as Components from './components'
-import { BASE_FONT_SIZE_PX, Colors } from './constants'
+import { BASE_FONT_SIZE_PX, Colors, DeviceBreakpoints } from './constants'
 
 export interface UseToastReturn {
   (options?: UseToastOptions): string | number | undefined
@@ -108,6 +108,7 @@ const CustomTheme = {
     initialColorMode: 'system',
     useSystemColorMode: false,
   },
+  breakpoints: DeviceBreakpoints,
   styles: GlobalStyles,
   sizes: {
     container: {

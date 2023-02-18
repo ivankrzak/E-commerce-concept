@@ -2,15 +2,19 @@ import { IPrismaContext } from 'api/prisma/IPrismaContext'
 
 export const orderById = async (
   _parent: unknown,
-  args: { orderId: number },
+  args: { id: number },
   context: IPrismaContext
 ) =>
   context.prisma.storeOrder.findUnique({
-    where: { id: args.orderId },
+    where: { id: args.id },
     include: {
       shippingMethod: true,
       paymentMethod: true,
       user: true,
-      storeOrderItems: true,
+      storeOrderItems: {
+        include: {
+          productVariant: true,
+        },
+      },
     },
   })

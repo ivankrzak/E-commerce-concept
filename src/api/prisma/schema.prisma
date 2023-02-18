@@ -28,6 +28,7 @@ enum UserRole {
 enum ShopOrderStatus {
   NEW
   IN_PROGRESS
+  IN_TRANSIT
   COMPLETED
   FAILED
 }

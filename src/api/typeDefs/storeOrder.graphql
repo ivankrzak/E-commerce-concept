@@ -1,6 +1,7 @@
-enum ShopOrderStatus {
+enum StoreOrderStatus {
   NEW
   IN_PROGRESS
+  IN_TRANSIT
   COMPLETED
   FAILED
 }
@@ -26,8 +27,8 @@ type StoreOrder {
   id: Int!
   totalAmount: Int!
   shippingTrackingNumber: Int
-  notes: Boolean
-  status: ShopOrderStatus!
+  notes: String
+  status: StoreOrderStatus!
   paymentStatus: PaymentStatus!
   # TODO make required later
   userId: String
@@ -56,12 +57,12 @@ input CreateOrderInput {
 
 input ChangeOrderStatusInput {
   orderIds: [Int!]!
-  status: ShopOrderStatus!
+  status: StoreOrderStatus!
 }
 
 type Query {
   orders: [StoreOrder!]!
-  orderById: StoreOrder!
+  orderById(id: Int!): StoreOrder!
 }
 
 type Mutation {

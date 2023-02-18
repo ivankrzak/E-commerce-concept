@@ -1,14 +1,15 @@
 import React from 'react'
 import { Button, Flex, useColorMode, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { Route } from 'constants/routes'
 import {
-  GridIcon,
   HomeIcon,
   SettingsIcon,
   ShoppingCartIcon,
   StockUpIcon,
   UsersIcon,
 } from 'components/backoffice/Icons'
+import { TshirtIcon } from 'components/backoffice/Icons/TshirtIcon'
 import { MenuItem } from './MenuItem'
 
 export const SideMenu = () => {
@@ -16,30 +17,33 @@ export const SideMenu = () => {
   const { pathname } = useRouter()
 
   return (
-    <Flex left={0} top={0} direction="column" w="240px" h="100vh">
+    <Flex
+      left={0}
+      top={0}
+      direction="column"
+      w="240px"
+      h="100vh"
+      bg="backoffice.ghostWhite"
+    >
       <Flex bg="aliceblue" w="full" h="76px" />
       <VStack w="240px" h="full" spacing="8px" p="24px">
         <MenuItem
           label="Dashboard"
-          routeTo="/backoffice"
+          routeTo={Route.BackOffice.BackofficeDashboard()}
           icon={<HomeIcon w="20px" />}
-          isSelected={pathname === '/backoffice'}
+          isSelected={pathname === Route.BackOffice.BackofficeDashboard()}
         />
         <MenuItem
           label="Orders"
           icon={<ShoppingCartIcon w="20px" />}
-          subMenu={[
-            { label: 'New Orders', routeTo: '/' },
-            { label: 'In Progress', routeTo: '/' },
-            { label: 'Completed', routeTo: '/' },
-          ]}
-          isSelected={pathname === '/orders'}
+          routeTo={Route.BackOffice.Orders()}
+          isSelected={pathname === Route.BackOffice.Orders()}
         />
         <MenuItem
           label="Products"
-          icon={<GridIcon w="20px" />}
-          routeTo="/backoffice/products"
-          isSelected={pathname === '/backoffice/products'}
+          icon={<TshirtIcon w="20px" />}
+          routeTo={Route.BackOffice.Products()}
+          isSelected={pathname === Route.BackOffice.Products()}
           //   subMenu={[
           //     { label: 'Products', routeTo: '/' },
           //     { label: 'Categories', routeTo: '/' },
@@ -49,24 +53,20 @@ export const SideMenu = () => {
         <MenuItem
           label="Marketing"
           icon={<StockUpIcon w="20px" />}
-          subMenu={[
-            { label: 'Coupons', routeTo: '/' },
-            { label: 'Categories', routeTo: '/' },
-            { label: 'Options', routeTo: '/' },
-          ]}
-          isSelected={pathname === '/orders'}
+          routeTo={Route.BackOffice.Marketing()}
+          isSelected={pathname === Route.BackOffice.Marketing()}
         />
         <MenuItem
           icon={<UsersIcon w="20px" />}
           label="Customers"
-          routeTo="/"
-          isSelected={pathname === '/orders'}
+          routeTo={Route.BackOffice.Customers()}
+          isSelected={pathname === Route.BackOffice.Customers()}
         />
         <MenuItem
           icon={<SettingsIcon w="20px" />}
           label="Settings"
-          routeTo="/"
-          isSelected={pathname === '/orders'}
+          routeTo={Route.BackOffice.Settings()}
+          isSelected={pathname === Route.BackOffice.Settings()}
         />
       </VStack>
       <Button bottom={0} onClick={toggleColorMode}>

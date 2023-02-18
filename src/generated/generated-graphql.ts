@@ -28,9 +28,22 @@ export type Category = {
   updatedAt: Scalars['Date'];
 };
 
+export type ChangeOrderStatusInput = {
+  orderIds: Array<Scalars['Int']>;
+  status: StoreOrderStatus;
+};
+
 export type CreateCategoryInput = {
   name: Scalars['String'];
   parentCategoryId?: InputMaybe<Scalars['Int']>;
+};
+
+export type CreateOrderInput = {
+  notes?: InputMaybe<Scalars['String']>;
+  orderedItems: Array<OrderItemInput>;
+  paymentMethodId: Scalars['Int'];
+  shippingMethodId: Scalars['Int'];
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateProductColorInput = {
@@ -81,7 +94,9 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeOrderStatus: Scalars['Boolean'];
   createCategory?: Maybe<Category>;
+  createOrder: StoreOrder;
   createProduct?: Maybe<Product>;
   createProductColor?: Maybe<ProductColor>;
   createProductSize?: Maybe<ProductSize>;
@@ -100,8 +115,18 @@ export type Mutation = {
 };
 
 
+export type MutationChangeOrderStatusArgs = {
+  input: ChangeOrderStatusInput;
+};
+
+
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  input: CreateOrderInput;
 };
 
 
@@ -184,6 +209,24 @@ export type MutationUpdateProductVariantArgs = {
   productVariantId: Scalars['Int'];
 };
 
+export type OrderItemInput = {
+  productVariantId: Scalars['Int'];
+  quantity: Scalars['Int'];
+};
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  id: Scalars['Int'];
+  isActive: Scalars['Boolean'];
+  name: Scalars['String'];
+};
+
+export enum PaymentStatus {
+  Awaiting = 'AWAITING',
+  Failed = 'FAILED',
+  Successful = 'SUCCESSFUL'
+}
+
 export type Product = {
   __typename?: 'Product';
   allowOutOfStockPurchase: Scalars['Boolean'];
@@ -253,11 +296,15 @@ export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
   login?: Maybe<Scalars['Boolean']>;
+  orderById: StoreOrder;
+  orders: Array<StoreOrder>;
+  paymentMethods: Array<PaymentMethod>;
   productBySlug: Product;
   productColors?: Maybe<Array<ProductColor>>;
   productSizes?: Maybe<Array<ProductSize>>;
   productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
   products: Array<Product>;
+  shippingMethods: Array<ShippingMethod>;
 };
 
 
@@ -266,9 +313,61 @@ export type QueryLoginArgs = {
 };
 
 
+export type QueryOrderByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryProductBySlugArgs = {
   slug: Scalars['String'];
 };
+
+export type ShippingMethod = {
+  __typename?: 'ShippingMethod';
+  id: Scalars['Int'];
+  isActive: Scalars['Boolean'];
+  name: Scalars['String'];
+  price: Scalars['Int'];
+};
+
+export type StoreOrder = {
+  __typename?: 'StoreOrder';
+  createdAt: Scalars['Date'];
+  id: Scalars['Int'];
+  notes?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  paymentMethodId: Scalars['Int'];
+  paymentStatus: PaymentStatus;
+  shippingMethod: ShippingMethod;
+  shippingMethodId: Scalars['Int'];
+  shippingTrackingNumber?: Maybe<Scalars['Int']>;
+  status: StoreOrderStatus;
+  storeOrderItems: Array<StoreOrderItems>;
+  totalAmount: Scalars['Int'];
+  updatedAt: Scalars['Date'];
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type StoreOrderItems = {
+  __typename?: 'StoreOrderItems';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  price: Scalars['Int'];
+  productVariant?: Maybe<ProductVariant>;
+  productVariantId?: Maybe<Scalars['Int']>;
+  quantity: Scalars['Int'];
+  storeOrder?: Maybe<StoreOrder>;
+  storeOrderId?: Maybe<Scalars['Int']>;
+};
+
+export enum StoreOrderStatus {
+  Completed = 'COMPLETED',
+  Failed = 'FAILED',
+  InProgress = 'IN_PROGRESS',
+  InTransit = 'IN_TRANSIT',
+  New = 'NEW'
+}
 
 export type SyncedPricesInput = {
   price: Scalars['Int'];
@@ -377,6 +476,18 @@ export type UpdateProductMutationVariables = Exact<{
 
 
 export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: { __typename?: 'Product', id: number, name: string, slug: string } | null };
+
+export type OrderListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OrderListQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null }> }> };
+
+export type OrderByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null, productVariant?: { __typename?: 'ProductVariant', id: number, sku: number, quantity: number } | null }> } };
 
 export type LoginQueryVariables = Exact<{
   input: LoginInput;
@@ -750,6 +861,144 @@ export function useUpdateProductMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateProductMutationHookResult = ReturnType<typeof useUpdateProductMutation>;
 export type UpdateProductMutationResult = Apollo.MutationResult<UpdateProductMutation>;
 export type UpdateProductMutationOptions = Apollo.BaseMutationOptions<UpdateProductMutation, UpdateProductMutationVariables>;
+export const OrderListDocument = gql`
+    query OrderList {
+  orders {
+    id
+    totalAmount
+    shippingTrackingNumber
+    notes
+    status
+    paymentStatus
+    userId
+    paymentMethodId
+    shippingMethodId
+    createdAt
+    updatedAt
+    user {
+      email
+      name
+    }
+    paymentMethod {
+      id
+      isActive
+      name
+    }
+    shippingMethod {
+      id
+      isActive
+      name
+      price
+    }
+    storeOrderItems {
+      id
+      name
+      quantity
+      price
+      storeOrderId
+    }
+  }
+}
+    `;
+
+/**
+ * __useOrderListQuery__
+ *
+ * To run a query within a React component, call `useOrderListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOrderListQuery(baseOptions?: Apollo.QueryHookOptions<OrderListQuery, OrderListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderListQuery, OrderListQueryVariables>(OrderListDocument, options);
+      }
+export function useOrderListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderListQuery, OrderListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderListQuery, OrderListQueryVariables>(OrderListDocument, options);
+        }
+export type OrderListQueryHookResult = ReturnType<typeof useOrderListQuery>;
+export type OrderListLazyQueryHookResult = ReturnType<typeof useOrderListLazyQuery>;
+export type OrderListQueryResult = Apollo.QueryResult<OrderListQuery, OrderListQueryVariables>;
+export const OrderByIdDocument = gql`
+    query OrderById($id: Int!) {
+  orderById(id: $id) {
+    id
+    totalAmount
+    shippingTrackingNumber
+    notes
+    status
+    paymentStatus
+    userId
+    paymentMethodId
+    shippingMethodId
+    createdAt
+    updatedAt
+    user {
+      email
+      name
+    }
+    paymentMethod {
+      id
+      isActive
+      name
+    }
+    shippingMethod {
+      id
+      isActive
+      name
+      price
+    }
+    storeOrderItems {
+      id
+      name
+      quantity
+      price
+      storeOrderId
+      productVariant {
+        id
+        sku
+        quantity
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderByIdQuery(baseOptions: Apollo.QueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+      }
+export function useOrderByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+        }
+export type OrderByIdQueryHookResult = ReturnType<typeof useOrderByIdQuery>;
+export type OrderByIdLazyQueryHookResult = ReturnType<typeof useOrderByIdLazyQuery>;
+export type OrderByIdQueryResult = Apollo.QueryResult<OrderByIdQuery, OrderByIdQueryVariables>;
 export const LoginDocument = gql`
     query Login($input: LoginInput!) {
   login(input: $input)

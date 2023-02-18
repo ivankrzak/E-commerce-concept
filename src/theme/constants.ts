@@ -3,10 +3,8 @@
 export const DeviceBreakpoints = {
   xs: '320px',
   sm: '480px',
-  md: '768px',
-  lg: '992px',
-  xl: '1296px',
-  '2xl': '1536px',
+  md: '700px', // Tablet
+  lg: '1025px', // Desktop
 }
 
 export interface ThemeColors {

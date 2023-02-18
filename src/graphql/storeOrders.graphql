@@ -1,0 +1,80 @@
+query OrderList {
+  orders {
+    id
+    totalAmount
+    shippingTrackingNumber
+    notes
+    status
+    paymentStatus
+    userId
+    paymentMethodId
+    shippingMethodId
+    createdAt
+    updatedAt
+    user {
+      email
+      name
+    }
+    paymentMethod {
+      id
+      isActive
+      name
+    }
+    shippingMethod {
+      id
+      isActive
+      name
+      price
+    }
+    storeOrderItems {
+      id
+      name
+      quantity
+      price
+      storeOrderId
+    }
+  }
+}
+
+query OrderById($id: Int!) {
+  orderById(id: $id) {
+    id
+    totalAmount
+    shippingTrackingNumber
+    notes
+    status
+    paymentStatus
+    userId
+    paymentMethodId
+    shippingMethodId
+    createdAt
+    updatedAt
+    user {
+      email
+      name
+    }
+    paymentMethod {
+      id
+      isActive
+      name
+    }
+    shippingMethod {
+      id
+      isActive
+      name
+      price
+    }
+    storeOrderItems {
+      id
+      name
+      quantity
+      price
+      storeOrderId
+      productVariant {
+        id
+        sku
+        quantity
+      }
+    }
+  }
+}

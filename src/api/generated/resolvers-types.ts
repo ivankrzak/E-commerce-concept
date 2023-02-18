@@ -32,7 +32,7 @@ export type Category = {
 
 export type ChangeOrderStatusInput = {
   orderIds: Array<Scalars['Int']>;
-  status: ShopOrderStatus;
+  status: StoreOrderStatus;
 };
 
 export type CreateCategoryInput = {
@@ -315,6 +315,11 @@ export type QueryLoginArgs = {
 };
 
 
+export type QueryOrderByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryProductBySlugArgs = {
   slug: Scalars['String'];
 };
@@ -327,25 +332,18 @@ export type ShippingMethod = {
   price: Scalars['Int'];
 };
 
-export enum ShopOrderStatus {
-  Completed = 'COMPLETED',
-  Failed = 'FAILED',
-  InProgress = 'IN_PROGRESS',
-  New = 'NEW'
-}
-
 export type StoreOrder = {
   __typename?: 'StoreOrder';
   createdAt: Scalars['Date'];
   id: Scalars['Int'];
-  notes?: Maybe<Scalars['Boolean']>;
+  notes?: Maybe<Scalars['String']>;
   paymentMethod: PaymentMethod;
   paymentMethodId: Scalars['Int'];
   paymentStatus: PaymentStatus;
   shippingMethod: ShippingMethod;
   shippingMethodId: Scalars['Int'];
   shippingTrackingNumber?: Maybe<Scalars['Int']>;
-  status: ShopOrderStatus;
+  status: StoreOrderStatus;
   storeOrderItems: Array<StoreOrderItems>;
   totalAmount: Scalars['Int'];
   updatedAt: Scalars['Date'];
@@ -364,6 +362,14 @@ export type StoreOrderItems = {
   storeOrder?: Maybe<StoreOrder>;
   storeOrderId?: Maybe<Scalars['Int']>;
 };
+
+export enum StoreOrderStatus {
+  Completed = 'COMPLETED',
+  Failed = 'FAILED',
+  InProgress = 'IN_PROGRESS',
+  InTransit = 'IN_TRANSIT',
+  New = 'NEW'
+}
 
 export type SyncedPricesInput = {
   price: Scalars['Int'];
@@ -518,9 +524,9 @@ export type ResolversTypes = ResolversObject<{
   ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversTypes['ProductColor']>, product?: Maybe<ResolversTypes['Product']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
   Query: ResolverTypeWrapper<{}>;
   ShippingMethod: ResolverTypeWrapper<ShippingMethod>;
-  ShopOrderStatus: ShopOrderStatus;
   StoreOrder: ResolverTypeWrapper<Omit<StoreOrder, 'storeOrderItems'> & { storeOrderItems: Array<ResolversTypes['StoreOrderItems']> }>;
   StoreOrderItems: ResolverTypeWrapper<Omit<StoreOrderItems, 'productVariant' | 'storeOrder'> & { productVariant?: Maybe<ResolversTypes['ProductVariant']>, storeOrder?: Maybe<ResolversTypes['StoreOrder']> }>;
+  StoreOrderStatus: StoreOrderStatus;
   String: ResolverTypeWrapper<Scalars['String']>;
   SyncedPricesInput: SyncedPricesInput;
   UpdateCategoryInput: UpdateCategoryInput;
@@ -679,7 +685,7 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   login?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
-  orderById?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType>;
+  orderById?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType, RequireFields<QueryOrderByIdArgs, 'id'>>;
   orders?: Resolver<Array<ResolversTypes['StoreOrder']>, ParentType, ContextType>;
   paymentMethods?: Resolver<Array<ResolversTypes['PaymentMethod']>, ParentType, ContextType>;
   productBySlug?: Resolver<ResolversTypes['Product'], ParentType, ContextType, RequireFields<QueryProductBySlugArgs, 'slug'>>;
@@ -701,14 +707,14 @@ export type ShippingMethodResolvers<ContextType = IPrismaContext, ParentType ext
 export type StoreOrderResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['StoreOrder'] = ResolversParentTypes['StoreOrder']> = ResolversObject<{
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  notes?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   paymentMethod?: Resolver<ResolversTypes['PaymentMethod'], ParentType, ContextType>;
   paymentMethodId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   paymentStatus?: Resolver<ResolversTypes['PaymentStatus'], ParentType, ContextType>;
   shippingMethod?: Resolver<ResolversTypes['ShippingMethod'], ParentType, ContextType>;
   shippingMethodId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   shippingTrackingNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['ShopOrderStatus'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['StoreOrderStatus'], ParentType, ContextType>;
   storeOrderItems?: Resolver<Array<ResolversTypes['StoreOrderItems']>, ParentType, ContextType>;
   totalAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
