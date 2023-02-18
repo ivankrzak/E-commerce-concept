@@ -1,8 +1,11 @@
 import { mergeResolvers } from '@graphql-tools/merge'
 import category from './category'
+import paymentMethod from './paymentMethod/paymentMethod'
 import product from './product'
 import productOptions from './productOptions'
 import productVariant from './productVariant'
+import shippingMethod from './shippingMethod/shippingMethod'
+import storeOrder from './storeOrder/storeOrder'
 import user from './user'
 
 export default mergeResolvers([
@@ -11,4 +14,7 @@ export default mergeResolvers([
   productOptions,
   category,
   user,
+  shippingMethod,
+  paymentMethod,
+  storeOrder,
 ])

@@ -30,9 +30,22 @@ export type Category = {
   updatedAt: Scalars['Date'];
 };
 
+export type ChangeOrderStatusInput = {
+  orderIds: Array<Scalars['Int']>;
+  status: StoreOrderStatus;
+};
+
 export type CreateCategoryInput = {
   name: Scalars['String'];
   parentCategoryId?: InputMaybe<Scalars['Int']>;
+};
+
+export type CreateOrderInput = {
+  notes?: InputMaybe<Scalars['String']>;
+  orderedItems: Array<OrderItemInput>;
+  paymentMethodId: Scalars['Int'];
+  shippingMethodId: Scalars['Int'];
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateProductColorInput = {
@@ -83,7 +96,9 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeOrderStatus: Scalars['Boolean'];
   createCategory?: Maybe<Category>;
+  createOrder: StoreOrder;
   createProduct?: Maybe<Product>;
   createProductColor?: Maybe<ProductColor>;
   createProductSize?: Maybe<ProductSize>;
@@ -102,8 +117,18 @@ export type Mutation = {
 };
 
 
+export type MutationChangeOrderStatusArgs = {
+  input: ChangeOrderStatusInput;
+};
+
+
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  input: CreateOrderInput;
 };
 
 
@@ -186,6 +211,24 @@ export type MutationUpdateProductVariantArgs = {
   productVariantId: Scalars['Int'];
 };
 
+export type OrderItemInput = {
+  productVariantId: Scalars['Int'];
+  quantity: Scalars['Int'];
+};
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  id: Scalars['Int'];
+  isActive: Scalars['Boolean'];
+  name: Scalars['String'];
+};
+
+export enum PaymentStatus {
+  Awaiting = 'AWAITING',
+  Failed = 'FAILED',
+  Successful = 'SUCCESSFUL'
+}
+
 export type Product = {
   __typename?: 'Product';
   allowOutOfStockPurchase: Scalars['Boolean'];
@@ -255,11 +298,15 @@ export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
   login?: Maybe<Scalars['Boolean']>;
+  orderById: StoreOrder;
+  orders: Array<StoreOrder>;
+  paymentMethods: Array<PaymentMethod>;
   productBySlug: Product;
   productColors?: Maybe<Array<ProductColor>>;
   productSizes?: Maybe<Array<ProductSize>>;
   productVariants?: Maybe<Array<Maybe<ProductVariant>>>;
   products: Array<Product>;
+  shippingMethods: Array<ShippingMethod>;
 };
 
 
@@ -268,9 +315,61 @@ export type QueryLoginArgs = {
 };
 
 
+export type QueryOrderByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryProductBySlugArgs = {
   slug: Scalars['String'];
 };
+
+export type ShippingMethod = {
+  __typename?: 'ShippingMethod';
+  id: Scalars['Int'];
+  isActive: Scalars['Boolean'];
+  name: Scalars['String'];
+  price: Scalars['Int'];
+};
+
+export type StoreOrder = {
+  __typename?: 'StoreOrder';
+  createdAt: Scalars['Date'];
+  id: Scalars['Int'];
+  notes?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  paymentMethodId: Scalars['Int'];
+  paymentStatus: PaymentStatus;
+  shippingMethod: ShippingMethod;
+  shippingMethodId: Scalars['Int'];
+  shippingTrackingNumber?: Maybe<Scalars['Int']>;
+  status: StoreOrderStatus;
+  storeOrderItems: Array<StoreOrderItems>;
+  totalAmount: Scalars['Int'];
+  updatedAt: Scalars['Date'];
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type StoreOrderItems = {
+  __typename?: 'StoreOrderItems';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  price: Scalars['Int'];
+  productVariant?: Maybe<ProductVariant>;
+  productVariantId?: Maybe<Scalars['Int']>;
+  quantity: Scalars['Int'];
+  storeOrder?: Maybe<StoreOrder>;
+  storeOrderId?: Maybe<Scalars['Int']>;
+};
+
+export enum StoreOrderStatus {
+  Completed = 'COMPLETED',
+  Failed = 'FAILED',
+  InProgress = 'IN_PROGRESS',
+  InTransit = 'IN_TRANSIT',
+  New = 'NEW'
+}
 
 export type SyncedPricesInput = {
   price: Scalars['Int'];
@@ -403,7 +502,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversTypes['Category']>, products?: Maybe<Array<Maybe<ResolversTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversTypes['Category']>>> }>;
+  ChangeOrderStatusInput: ChangeOrderStatusInput;
   CreateCategoryInput: CreateCategoryInput;
+  CreateOrderInput: CreateOrderInput;
   CreateProductColorInput: CreateProductColorInput;
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
@@ -413,12 +514,19 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
+  OrderItemInput: OrderItemInput;
+  PaymentMethod: ResolverTypeWrapper<PaymentMethod>;
+  PaymentStatus: PaymentStatus;
   Product: ResolverTypeWrapper<ProductModel>;
   ProductColor: ResolverTypeWrapper<Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductSize: ResolverTypeWrapper<Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductStatus: ProductStatus;
   ProductVariant: ResolverTypeWrapper<Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversTypes['ProductColor']>, product?: Maybe<ResolversTypes['Product']>, size?: Maybe<ResolversTypes['ProductSize']> }>;
   Query: ResolverTypeWrapper<{}>;
+  ShippingMethod: ResolverTypeWrapper<ShippingMethod>;
+  StoreOrder: ResolverTypeWrapper<Omit<StoreOrder, 'storeOrderItems'> & { storeOrderItems: Array<ResolversTypes['StoreOrderItems']> }>;
+  StoreOrderItems: ResolverTypeWrapper<Omit<StoreOrderItems, 'productVariant' | 'storeOrder'> & { productVariant?: Maybe<ResolversTypes['ProductVariant']>, storeOrder?: Maybe<ResolversTypes['StoreOrder']> }>;
+  StoreOrderStatus: StoreOrderStatus;
   String: ResolverTypeWrapper<Scalars['String']>;
   SyncedPricesInput: SyncedPricesInput;
   UpdateCategoryInput: UpdateCategoryInput;
@@ -434,7 +542,9 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Category: Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversParentTypes['Category']>, products?: Maybe<Array<Maybe<ResolversParentTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversParentTypes['Category']>>> };
+  ChangeOrderStatusInput: ChangeOrderStatusInput;
   CreateCategoryInput: CreateCategoryInput;
+  CreateOrderInput: CreateOrderInput;
   CreateProductColorInput: CreateProductColorInput;
   CreateProductInput: CreateProductInput;
   CreateProductSizeInput: CreateProductSizeInput;
@@ -444,11 +554,16 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   LoginInput: LoginInput;
   Mutation: {};
+  OrderItemInput: OrderItemInput;
+  PaymentMethod: PaymentMethod;
   Product: ProductModel;
   ProductColor: Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductSize: Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductVariant: Omit<ProductVariant, 'color' | 'product' | 'size'> & { color?: Maybe<ResolversParentTypes['ProductColor']>, product?: Maybe<ResolversParentTypes['Product']>, size?: Maybe<ResolversParentTypes['ProductSize']> };
   Query: {};
+  ShippingMethod: ShippingMethod;
+  StoreOrder: Omit<StoreOrder, 'storeOrderItems'> & { storeOrderItems: Array<ResolversParentTypes['StoreOrderItems']> };
+  StoreOrderItems: Omit<StoreOrderItems, 'productVariant' | 'storeOrder'> & { productVariant?: Maybe<ResolversParentTypes['ProductVariant']>, storeOrder?: Maybe<ResolversParentTypes['StoreOrder']> };
   String: Scalars['String'];
   SyncedPricesInput: SyncedPricesInput;
   UpdateCategoryInput: UpdateCategoryInput;
@@ -482,7 +597,9 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  changeOrderStatus?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangeOrderStatusArgs, 'input'>>;
   createCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
+  createOrder?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType, RequireFields<MutationCreateOrderArgs, 'input'>>;
   createProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'input'>>;
   createProductColor?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType, RequireFields<MutationCreateProductColorArgs, 'input'>>;
   createProductSize?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType, RequireFields<MutationCreateProductSizeArgs, 'input'>>;
@@ -498,6 +615,13 @@ export type MutationResolvers<ContextType = IPrismaContext, ParentType extends R
   updateProductColor?: Resolver<Maybe<ResolversTypes['ProductColor']>, ParentType, ContextType, RequireFields<MutationUpdateProductColorArgs, 'input' | 'productColorId'>>;
   updateProductSize?: Resolver<Maybe<ResolversTypes['ProductSize']>, ParentType, ContextType, RequireFields<MutationUpdateProductSizeArgs, 'input' | 'productSizeId'>>;
   updateProductVariant?: Resolver<Maybe<ResolversTypes['ProductVariant']>, ParentType, ContextType, RequireFields<MutationUpdateProductVariantArgs, 'input' | 'productVariantId'>>;
+}>;
+
+export type PaymentMethodResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['PaymentMethod'] = ResolversParentTypes['PaymentMethod']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ProductResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = ResolversObject<{
@@ -561,11 +685,54 @@ export type ProductVariantResolvers<ContextType = IPrismaContext, ParentType ext
 export type QueryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   login?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
+  orderById?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType, RequireFields<QueryOrderByIdArgs, 'id'>>;
+  orders?: Resolver<Array<ResolversTypes['StoreOrder']>, ParentType, ContextType>;
+  paymentMethods?: Resolver<Array<ResolversTypes['PaymentMethod']>, ParentType, ContextType>;
   productBySlug?: Resolver<ResolversTypes['Product'], ParentType, ContextType, RequireFields<QueryProductBySlugArgs, 'slug'>>;
   productColors?: Resolver<Maybe<Array<ResolversTypes['ProductColor']>>, ParentType, ContextType>;
   productSizes?: Resolver<Maybe<Array<ResolversTypes['ProductSize']>>, ParentType, ContextType>;
   productVariants?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>>, ParentType, ContextType>;
   products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
+  shippingMethods?: Resolver<Array<ResolversTypes['ShippingMethod']>, ParentType, ContextType>;
+}>;
+
+export type ShippingMethodResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['ShippingMethod'] = ResolversParentTypes['ShippingMethod']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type StoreOrderResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['StoreOrder'] = ResolversParentTypes['StoreOrder']> = ResolversObject<{
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  paymentMethod?: Resolver<ResolversTypes['PaymentMethod'], ParentType, ContextType>;
+  paymentMethodId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  paymentStatus?: Resolver<ResolversTypes['PaymentStatus'], ParentType, ContextType>;
+  shippingMethod?: Resolver<ResolversTypes['ShippingMethod'], ParentType, ContextType>;
+  shippingMethodId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  shippingTrackingNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['StoreOrderStatus'], ParentType, ContextType>;
+  storeOrderItems?: Resolver<Array<ResolversTypes['StoreOrderItems']>, ParentType, ContextType>;
+  totalAmount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type StoreOrderItemsResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['StoreOrderItems'] = ResolversParentTypes['StoreOrderItems']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  productVariant?: Resolver<Maybe<ResolversTypes['ProductVariant']>, ParentType, ContextType>;
+  productVariantId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  storeOrder?: Resolver<Maybe<ResolversTypes['StoreOrder']>, ParentType, ContextType>;
+  storeOrderId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -579,11 +746,15 @@ export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
   Category?: CategoryResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
+  PaymentMethod?: PaymentMethodResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductColor?: ProductColorResolvers<ContextType>;
   ProductSize?: ProductSizeResolvers<ContextType>;
   ProductVariant?: ProductVariantResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  ShippingMethod?: ShippingMethodResolvers<ContextType>;
+  StoreOrder?: StoreOrderResolvers<ContextType>;
+  StoreOrderItems?: StoreOrderItemsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 

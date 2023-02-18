@@ -13,6 +13,79 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+enum ProductStatus {
+  PRE_ORDER
+  ACTIVE
+  SALE
+  DISABLED
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum ShopOrderStatus {
+  NEW
+  IN_PROGRESS
+  IN_TRANSIT
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  SUCCESSFUL
+  AWAITING
+  FAILED
+}
+
+model PaymentMethod {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(250)
+  isActive   Boolean      @default(true)
+  StoreOrder StoreOrder[]
+}
+
+model ShippingMethod {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(250)
+  price      Int
+  isActive   Boolean      @default(true)
+  StoreOrder StoreOrder[]
+}
+
+model StoreOrder {
+  id                     Int             @id @default(autoincrement())
+  totalAmount            Int
+  shippingTrackingNumber Int?
+  notes                  String?
+  status                 ShopOrderStatus @default(NEW)
+  paymentStatus          PaymentStatus   @default(AWAITING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId           String?
+  paymentMethodId  Int
+  shippingMethodId Int
+  user             User?            @relation(fields: [userId], references: [id])
+  paymentMethod    PaymentMethod    @relation(fields: [paymentMethodId], references: [id])
+  shippingMethod   ShippingMethod   @relation(fields: [shippingMethodId], references: [id])
+  storeOrderItems  StoreOrderItem[]
+}
+
+model StoreOrderItem {
+  id       Int    @id @default(autoincrement())
+  name     String
+  quantity Int
+  price    Int
+
+  storeOrderId     Int
+  productVariantId Int
+  storeOrder       StoreOrder     @relation(fields: [storeOrderId], references: [id])
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+}
+
 model Product {
   id                      Int              @id @default(autoincrement())
   slug                    String           @unique
@@ -43,22 +116,23 @@ model Category {
 }
 
 model ProductVariant {
-  id           Int           @id @default(autoincrement())
-  productId    Int
-  sku          Int?
-  quantity     Int           @default(0)
-  variantImage String?
-  status       ProductStatus @default(ACTIVE)
-  colorId      Int?
-  sizeId       Int?
-  price        Int
-  salePrice    Int?
-  isOnSale     Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  color        ProductColor? @relation(fields: [colorId], references: [id])
-  size         ProductSize?  @relation(fields: [sizeId], references: [id])
-  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id             Int              @id @default(autoincrement())
+  productId      Int
+  sku            Int?
+  quantity       Int              @default(0)
+  variantImage   String?
+  status         ProductStatus    @default(ACTIVE)
+  colorId        Int?
+  sizeId         Int?
+  price          Int
+  salePrice      Int?
+  isOnSale       Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  color          ProductColor?    @relation(fields: [colorId], references: [id])
+  size           ProductSize?     @relation(fields: [sizeId], references: [id])
+  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  StoreOrderItem StoreOrderItem[]
 }
 
 model ProductColor {
@@ -76,18 +150,6 @@ model ProductSize {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   productVariants ProductVariant[]
-}
-
-enum ProductStatus {
-  PRE_ORDER
-  ACTIVE
-  SALE
-  DISABLED
-}
-
-enum UserRole {
-  ADMIN
-  CUSTOMER
 }
 
 model Account {
@@ -118,15 +180,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   password      String?
   emailVerified DateTime?
-  role          UserRole? @default(CUSTOMER)
+  role          UserRole?    @default(CUSTOMER)
   image         String?
   accounts      Account[]
   sessions      Session[]
+  StoreOrder    StoreOrder[]
 }
 
 model VerificationToken {

@@ -1,0 +1,9 @@
+type PaymentMethod {
+  id: Int!
+  name: String!
+  isActive: Boolean!
+}
+
+type Query {
+  paymentMethods: [PaymentMethod!]!
+}
