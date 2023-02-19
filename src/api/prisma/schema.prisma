@@ -39,6 +39,25 @@ enum PaymentStatus {
   FAILED
 }
 
+enum AddressType {
+  BILLING
+  SHIPPING
+}
+
+model Address {
+  id          Int         @id @default(autoincrement())
+  type        AddressType @default(BILLING)
+  street      String
+  houseNumber String?
+  city        String
+  postCode    String
+  formatted   String
+  country     String
+  placeId     String
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model PaymentMethod {
   id         Int          @id @default(autoincrement())
   name       String       @db.VarChar(250)
@@ -190,6 +209,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   StoreOrder    StoreOrder[]
+  Address       Address[]
 }
 
 model VerificationToken {

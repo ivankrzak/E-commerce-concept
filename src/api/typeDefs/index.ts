@@ -1,4 +1,5 @@
 import { mergeTypeDefs } from '@graphql-tools/merge'
+import address from './address.graphql'
 import category from './category.graphql'
 import date from './date.graphql'
 import directives from './directives.graphql'
@@ -11,6 +12,7 @@ import user from './user.graphql'
 
 export default mergeTypeDefs([
   product,
+  address,
   directives,
   productVariant,
   category,

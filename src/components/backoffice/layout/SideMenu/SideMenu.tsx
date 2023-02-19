@@ -24,6 +24,7 @@ export const SideMenu = () => {
       w="240px"
       h="100vh"
       bg="backoffice.ghostWhite"
+      _dark={{ bg: 'backoffice.deepPurple' }}
     >
       <Flex bg="aliceblue" w="full" h="76px" />
       <VStack w="240px" h="full" spacing="8px" p="24px">

@@ -18,6 +18,26 @@ export type Scalars = {
   Date: any;
 };
 
+export type Address = {
+  __typename?: 'Address';
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+  user?: Maybe<User>;
+  userId: Scalars['String'];
+};
+
+export enum AddressType {
+  Billing = 'BILLING',
+  Shipping = 'SHIPPING'
+}
+
 export type Category = {
   __typename?: 'Category';
   createdAt: Scalars['Date'];
@@ -87,6 +107,46 @@ export type CreateUserInput = {
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type GeoapifyAddress = {
+  __typename?: 'GeoapifyAddress';
+  addressLine1?: Maybe<Scalars['String']>;
+  addressLine2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  countryCode?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  houseNumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  placeId?: Maybe<Scalars['String']>;
+  postCode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  stateCode?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+};
+
+export type GeoapifyApiResponse = {
+  __typename?: 'GeoapifyApiResponse';
+  address_line1?: Maybe<Scalars['String']>;
+  address_line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  country_code?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  housenumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  place_id?: Maybe<Scalars['String']>;
+  postcode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  state_code?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
 };
 
 export type LoginInput = {
@@ -229,6 +289,10 @@ export enum PaymentStatus {
   Successful = 'SUCCESSFUL'
 }
 
+export type PlacesInput = {
+  searchQuery: Scalars['String'];
+};
+
 export type Product = {
   __typename?: 'Product';
   allowOutOfStockPurchase: Scalars['Boolean'];
@@ -301,6 +365,7 @@ export type Query = {
   orderById: StoreOrder;
   orders: Array<StoreOrder>;
   paymentMethods: Array<PaymentMethod>;
+  places: Array<GeoapifyAddress>;
   productBySlug: Product;
   productColors?: Maybe<Array<ProductColor>>;
   productSizes?: Maybe<Array<ProductSize>>;
@@ -317,6 +382,11 @@ export type QueryLoginArgs = {
 
 export type QueryOrderByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryPlacesArgs = {
+  input: PlacesInput;
 };
 
 
@@ -420,6 +490,7 @@ export type UpdateProductVariantInput = {
 
 export type User = {
   __typename?: 'User';
+  address?: Maybe<Address>;
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
@@ -500,6 +571,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Address: ResolverTypeWrapper<Address>;
+  AddressType: AddressType;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversTypes['Category']>, products?: Maybe<Array<Maybe<ResolversTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversTypes['Category']>>> }>;
   ChangeOrderStatusInput: ChangeOrderStatusInput;
@@ -511,12 +584,16 @@ export type ResolversTypes = ResolversObject<{
   CreateProductVariantInput: CreateProductVariantInput;
   CreateUserInput: CreateUserInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  GeoapifyAddress: ResolverTypeWrapper<GeoapifyAddress>;
+  GeoapifyApiResponse: ResolverTypeWrapper<GeoapifyApiResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
   OrderItemInput: OrderItemInput;
   PaymentMethod: ResolverTypeWrapper<PaymentMethod>;
   PaymentStatus: PaymentStatus;
+  PlacesInput: PlacesInput;
   Product: ResolverTypeWrapper<ProductModel>;
   ProductColor: ResolverTypeWrapper<Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
   ProductSize: ResolverTypeWrapper<Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversTypes['ProductVariant']>>> }>;
@@ -540,6 +617,7 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Address: Address;
   Boolean: Scalars['Boolean'];
   Category: Omit<Category, 'parentCategory' | 'products' | 'subCategories'> & { parentCategory?: Maybe<ResolversParentTypes['Category']>, products?: Maybe<Array<Maybe<ResolversParentTypes['Product']>>>, subCategories?: Maybe<Array<Maybe<ResolversParentTypes['Category']>>> };
   ChangeOrderStatusInput: ChangeOrderStatusInput;
@@ -551,11 +629,15 @@ export type ResolversParentTypes = ResolversObject<{
   CreateProductVariantInput: CreateProductVariantInput;
   CreateUserInput: CreateUserInput;
   Date: Scalars['Date'];
+  Float: Scalars['Float'];
+  GeoapifyAddress: GeoapifyAddress;
+  GeoapifyApiResponse: GeoapifyApiResponse;
   Int: Scalars['Int'];
   LoginInput: LoginInput;
   Mutation: {};
   OrderItemInput: OrderItemInput;
   PaymentMethod: PaymentMethod;
+  PlacesInput: PlacesInput;
   Product: ProductModel;
   ProductColor: Omit<ProductColor, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
   ProductSize: Omit<ProductSize, 'productVariants'> & { productVariants?: Maybe<Array<Maybe<ResolversParentTypes['ProductVariant']>>> };
@@ -580,6 +662,21 @@ export type IsAuthDirectiveArgs = {
 
 export type IsAuthDirectiveResolver<Result, Parent, ContextType = IPrismaContext, Args = IsAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type AddressResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
+  city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  formatted?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  houseNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  placeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  postCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  street?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['AddressType'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type CategoryResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -595,6 +692,46 @@ export type CategoryResolvers<ContextType = IPrismaContext, ParentType extends R
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
+
+export type GeoapifyAddressResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['GeoapifyAddress'] = ResolversParentTypes['GeoapifyAddress']> = ResolversObject<{
+  addressLine1?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  addressLine2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  countryCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  county?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  district?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  formatted?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  houseNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  lon?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  placeId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  street?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GeoapifyApiResponseResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['GeoapifyApiResponse'] = ResolversParentTypes['GeoapifyApiResponse']> = ResolversObject<{
+  address_line1?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address_line2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country_code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  county?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  district?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  formatted?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  housenumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  lon?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  place_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postcode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state_code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  street?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
 
 export type MutationResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   changeOrderStatus?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangeOrderStatusArgs, 'input'>>;
@@ -688,6 +825,7 @@ export type QueryResolvers<ContextType = IPrismaContext, ParentType extends Reso
   orderById?: Resolver<ResolversTypes['StoreOrder'], ParentType, ContextType, RequireFields<QueryOrderByIdArgs, 'id'>>;
   orders?: Resolver<Array<ResolversTypes['StoreOrder']>, ParentType, ContextType>;
   paymentMethods?: Resolver<Array<ResolversTypes['PaymentMethod']>, ParentType, ContextType>;
+  places?: Resolver<Array<ResolversTypes['GeoapifyAddress']>, ParentType, ContextType, RequireFields<QueryPlacesArgs, 'input'>>;
   productBySlug?: Resolver<ResolversTypes['Product'], ParentType, ContextType, RequireFields<QueryProductBySlugArgs, 'slug'>>;
   productColors?: Resolver<Maybe<Array<ResolversTypes['ProductColor']>>, ParentType, ContextType>;
   productSizes?: Resolver<Maybe<Array<ResolversTypes['ProductSize']>>, ParentType, ContextType>;
@@ -736,6 +874,7 @@ export type StoreOrderItemsResolvers<ContextType = IPrismaContext, ParentType ex
 }>;
 
 export type UserResolvers<ContextType = IPrismaContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  address?: Resolver<Maybe<ResolversTypes['Address']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -743,8 +882,11 @@ export type UserResolvers<ContextType = IPrismaContext, ParentType extends Resol
 }>;
 
 export type Resolvers<ContextType = IPrismaContext> = ResolversObject<{
+  Address?: AddressResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  GeoapifyAddress?: GeoapifyAddressResolvers<ContextType>;
+  GeoapifyApiResponse?: GeoapifyApiResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaymentMethod?: PaymentMethodResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;

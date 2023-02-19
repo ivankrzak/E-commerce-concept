@@ -1,4 +1,5 @@
 import { mergeResolvers } from '@graphql-tools/merge'
+import address from './address/address'
 import category from './category'
 import paymentMethod from './paymentMethod/paymentMethod'
 import product from './product'
@@ -9,6 +10,7 @@ import storeOrder from './storeOrder/storeOrder'
 import user from './user'
 
 export default mergeResolvers([
+  address,
   product,
   productVariant,
   productOptions,

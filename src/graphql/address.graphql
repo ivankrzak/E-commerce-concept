@@ -1,0 +1,20 @@
+query Places($input: PlacesInput!) {
+  places(input: $input) {
+    country
+    countryCode
+    state
+    county
+    city
+    postCode
+    district
+    street
+    houseNumber
+    lon
+    lat
+    stateCode
+    formatted
+    addressLine1
+    addressLine2
+    placeId
+  }
+}

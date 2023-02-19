@@ -16,6 +16,26 @@ export type Scalars = {
   Date: string;
 };
 
+export type Address = {
+  __typename?: 'Address';
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+  user?: Maybe<User>;
+  userId: Scalars['String'];
+};
+
+export enum AddressType {
+  Billing = 'BILLING',
+  Shipping = 'SHIPPING'
+}
+
 export type Category = {
   __typename?: 'Category';
   createdAt: Scalars['Date'];
@@ -85,6 +105,46 @@ export type CreateUserInput = {
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type GeoapifyAddress = {
+  __typename?: 'GeoapifyAddress';
+  addressLine1?: Maybe<Scalars['String']>;
+  addressLine2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  countryCode?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  houseNumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  placeId?: Maybe<Scalars['String']>;
+  postCode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  stateCode?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+};
+
+export type GeoapifyApiResponse = {
+  __typename?: 'GeoapifyApiResponse';
+  address_line1?: Maybe<Scalars['String']>;
+  address_line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  country_code?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  housenumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  place_id?: Maybe<Scalars['String']>;
+  postcode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  state_code?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
 };
 
 export type LoginInput = {
@@ -227,6 +287,10 @@ export enum PaymentStatus {
   Successful = 'SUCCESSFUL'
 }
 
+export type PlacesInput = {
+  searchQuery: Scalars['String'];
+};
+
 export type Product = {
   __typename?: 'Product';
   allowOutOfStockPurchase: Scalars['Boolean'];
@@ -299,6 +363,7 @@ export type Query = {
   orderById: StoreOrder;
   orders: Array<StoreOrder>;
   paymentMethods: Array<PaymentMethod>;
+  places: Array<GeoapifyAddress>;
   productBySlug: Product;
   productColors?: Maybe<Array<ProductColor>>;
   productSizes?: Maybe<Array<ProductSize>>;
@@ -315,6 +380,11 @@ export type QueryLoginArgs = {
 
 export type QueryOrderByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryPlacesArgs = {
+  input: PlacesInput;
 };
 
 
@@ -418,6 +488,7 @@ export type UpdateProductVariantInput = {
 
 export type User = {
   __typename?: 'User';
+  address?: Maybe<Address>;
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
@@ -427,6 +498,13 @@ export enum UserRole {
   Admin = 'ADMIN',
   Customer = 'CUSTOMER'
 }
+
+export type PlacesQueryVariables = Exact<{
+  input: PlacesInput;
+}>;
+
+
+export type PlacesQuery = { __typename?: 'Query', places: Array<{ __typename?: 'GeoapifyAddress', country?: string | null, countryCode?: string | null, state?: string | null, county?: string | null, city?: string | null, postCode?: string | null, district?: string | null, street?: string | null, houseNumber?: string | null, lon: number, lat: number, stateCode?: string | null, formatted?: string | null, addressLine1?: string | null, addressLine2?: string | null, placeId?: string | null }> };
 
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -497,6 +575,56 @@ export type LoginQueryVariables = Exact<{
 export type LoginQuery = { __typename?: 'Query', login?: boolean | null };
 
 
+export const PlacesDocument = gql`
+    query Places($input: PlacesInput!) {
+  places(input: $input) {
+    country
+    countryCode
+    state
+    county
+    city
+    postCode
+    district
+    street
+    houseNumber
+    lon
+    lat
+    stateCode
+    formatted
+    addressLine1
+    addressLine2
+    placeId
+  }
+}
+    `;
+
+/**
+ * __usePlacesQuery__
+ *
+ * To run a query within a React component, call `usePlacesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlacesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlacesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePlacesQuery(baseOptions: Apollo.QueryHookOptions<PlacesQuery, PlacesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PlacesQuery, PlacesQueryVariables>(PlacesDocument, options);
+      }
+export function usePlacesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlacesQuery, PlacesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PlacesQuery, PlacesQueryVariables>(PlacesDocument, options);
+        }
+export type PlacesQueryHookResult = ReturnType<typeof usePlacesQuery>;
+export type PlacesLazyQueryHookResult = ReturnType<typeof usePlacesLazyQuery>;
+export type PlacesQueryResult = Apollo.QueryResult<PlacesQuery, PlacesQueryVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories {

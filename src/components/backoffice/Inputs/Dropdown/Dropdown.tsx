@@ -15,7 +15,7 @@ import {
   Props as ChakraSelectProps,
   Select,
 } from 'chakra-react-select'
-import { useIsOnTouchscreen } from 'hooks/useIsOnTouchscreen'
+import { useIsOnMobile } from 'hooks/useIsOnMobile'
 import { transparentize } from 'polished'
 import * as yup from 'yup'
 import { z } from 'zod'
@@ -81,7 +81,7 @@ export const Dropdown = forwardRef<HTMLSelectElement, DropdownProps>(
     ref: ForwardedRef<any>
   ) => {
     const internalRef = useRef(null)
-    const isTouchscreenDevice = useIsOnTouchscreen()
+    const isTouchscreenDevice = useIsOnMobile()
 
     return (
       <FormControl id={id} minW={0}>
