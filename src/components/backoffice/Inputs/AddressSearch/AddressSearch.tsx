@@ -55,8 +55,6 @@ export const AddressSearch = ({
     },
   })
 
-  console.log('placesResponse', placesResponse)
-
   const selectPlace = useCallback(
     (
       option: AddressSelectOption,
@@ -132,7 +130,6 @@ export const AddressSearch = ({
         }}
         onChange={(newValue, actionMeta) => {
           const selectedValue = newValue as AddressSelectOption
-          console.log('actionMeta', actionMeta)
           if (selectedValue && actionMeta.action === 'select-option') {
             selectPlace(selectedValue, actionMeta)
             externalOnChange?.()

@@ -21,13 +21,6 @@ input PlacesInput {
   searchQuery: String!
 }
 
-# input GoogleAddressInput {
-#   placeName: String!
-#   coordinates: CoordinatesInput!
-#   placeId: String!
-#   postCode: String!
-# }
-
 type GeoapifyApiResponse {
   country: String
   country_code: String
@@ -66,12 +59,6 @@ type GeoapifyAddress {
   placeId: String
 }
 
-# input AddressByPlaceIdInput {
-#   googlePlacesSessionToken: String!
-#   placeId: String!
-# }
-
 type Query {
   places(input: PlacesInput!): [GeoapifyAddress!]!
-  #   addressByPlaceId(input: AddressByPlaceIdInput!): GoogleAddress!
 }

@@ -56,8 +56,6 @@ export const FormAddressSearch = ({
     },
   })
 
-  // console.log('placesResponse', placesResponse)
-
   const selectPlace = useCallback(
     (
       option: AddressSelectOption,
