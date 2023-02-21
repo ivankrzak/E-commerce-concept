@@ -59,6 +59,23 @@ type GeoapifyAddress {
   placeId: String
 }
 
+input CreateAddressInput {
+  id: Int
+  type: AddressType!
+  street: String!
+  houseNumber: String
+  city: String!
+  postCode: String!
+  formatted: String!
+  country: String!
+  placeId: String!
+  userId: String!
+}
+
 type Query {
   places(input: PlacesInput!): [GeoapifyAddress!]!
+}
+
+type Mutation {
+  createOrUpdateAddress(input: CreateAddressInput!): Address!
 }

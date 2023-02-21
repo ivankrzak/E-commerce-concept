@@ -58,6 +58,20 @@ model Address {
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model OrderAddress {
+  id          Int         @id @default(autoincrement())
+  type        AddressType @default(BILLING)
+  street      String
+  houseNumber String?
+  city        String
+  postCode    String
+  formatted   String
+  country     String
+  placeId     String
+  orderId     Int
+  order       StoreOrder  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
 model PaymentMethod {
   id         Int          @id @default(autoincrement())
   name       String       @db.VarChar(250)
@@ -87,10 +101,16 @@ model StoreOrder {
   userId           String?
   paymentMethodId  Int
   shippingMethodId Int
-  user             User?            @relation(fields: [userId], references: [id])
-  paymentMethod    PaymentMethod    @relation(fields: [paymentMethodId], references: [id])
-  shippingMethod   ShippingMethod   @relation(fields: [shippingMethodId], references: [id])
-  storeOrderItems  StoreOrderItem[]
+
+  name      String
+  email     String
+  telNumber Int
+
+  user            User?            @relation(fields: [userId], references: [id])
+  paymentMethod   PaymentMethod    @relation(fields: [paymentMethodId], references: [id])
+  shippingMethod  ShippingMethod   @relation(fields: [shippingMethodId], references: [id])
+  storeOrderItems StoreOrderItem[]
+  orderAddresses  OrderAddress[]
 }
 
 model StoreOrderItem {

@@ -18,3 +18,22 @@ query Places($input: PlacesInput!) {
     placeId
   }
 }
+
+mutation CreateOrUpdateAddress($input: CreateAddressInput!) {
+  createOrUpdateAddress(input: $input) {
+    id
+    type
+    street
+    houseNumber
+    city
+    postCode
+    formatted
+    country
+    placeId
+    userId
+    user {
+      name
+      email
+    }
+  }
+}

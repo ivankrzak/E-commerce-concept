@@ -1,5 +1,5 @@
 import { GeoapifyAddress, QueryPlacesArgs } from 'api/generated/resolvers-types'
-import { GeoapifyApi } from 'api/utils/Geoapify'
+import { GeoapifyApi } from 'api/utils/GeoapifyApi'
 
 export const places = async (
   _: unknown,

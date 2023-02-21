@@ -8,8 +8,17 @@ export const createOrder = async (
   args: MutationCreateOrderArgs,
   context: IPrismaContext
 ) => {
-  const { userId, paymentMethodId, shippingMethodId, orderedItems, notes } =
-    args.input
+  const {
+    userId,
+    paymentMethodId,
+    shippingMethodId,
+    orderedItems,
+    notes,
+    name,
+    email,
+    telNumber,
+    addresses,
+  } = args.input
 
   const orderItems = await context.prisma.productVariant.findMany({
     where: {
@@ -28,6 +37,9 @@ export const createOrder = async (
       paymentMethodId,
       shippingMethodId,
       notes,
+      name,
+      email,
+      telNumber,
       totalAmount: sum(
         orderItems.map(
           ({ id: variantId, price, salePrice }) =>
@@ -50,6 +62,11 @@ export const createOrder = async (
                 )?.quantity ?? 1,
             })
           ),
+        },
+      },
+      orderAddresses: {
+        createMany: {
+          data: addresses,
         },
       },
     },

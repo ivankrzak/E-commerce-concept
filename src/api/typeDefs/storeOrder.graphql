@@ -12,6 +12,19 @@ enum PaymentStatus {
   FAILED
 }
 
+type OrderAddress {
+  id: Int!
+  type: AddressType!
+  street: String!
+  houseNumber: String
+  city: String!
+  postCode: String!
+  formatted: String!
+  country: String!
+  placeId: String!
+  orderId: Int!
+}
+
 type StoreOrderItems {
   id: Int!
   name: String!
@@ -30,16 +43,21 @@ type StoreOrder {
   notes: String
   status: StoreOrderStatus!
   paymentStatus: PaymentStatus!
-  # TODO make required later
-  userId: String
   paymentMethodId: Int!
   shippingMethodId: Int!
+  name: String!
+  email: String!
+  telNumber: Int!
+  # TODO make required later
+  userId: String
+
   createdAt: Date!
   updatedAt: Date!
   user: User
   paymentMethod: PaymentMethod!
   shippingMethod: ShippingMethod!
   storeOrderItems: [StoreOrderItems!]!
+  orderAddresses: [OrderAddress!]!
 }
 
 input OrderItemInput {
@@ -47,11 +65,26 @@ input OrderItemInput {
   quantity: Int!
 }
 
+input CreateOrderAddressInput {
+  type: AddressType!
+  street: String!
+  houseNumber: String
+  city: String!
+  postCode: String!
+  formatted: String!
+  country: String!
+  placeId: String!
+}
+
 input CreateOrderInput {
   userId: String
+  name: String!
+  email: String!
+  telNumber: Int!
   paymentMethodId: Int!
   shippingMethodId: Int!
   orderedItems: [OrderItemInput!]!
+  addresses: [CreateOrderAddressInput!]!
   notes: String
 }
 

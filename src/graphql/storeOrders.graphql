@@ -9,6 +9,9 @@ query OrderList {
     userId
     paymentMethodId
     shippingMethodId
+    name
+    email
+    telNumber
     createdAt
     updatedAt
     user {
@@ -33,6 +36,18 @@ query OrderList {
       price
       storeOrderId
     }
+    orderAddresses {
+      id
+      type
+      street
+      houseNumber
+      city
+      postCode
+      formatted
+      country
+      placeId
+      orderId
+    }
   }
 }
 
@@ -47,6 +62,9 @@ query OrderById($id: Int!) {
     userId
     paymentMethodId
     shippingMethodId
+    name
+    email
+    telNumber
     createdAt
     updatedAt
     user {
@@ -75,6 +93,18 @@ query OrderById($id: Int!) {
         sku
         quantity
       }
+    }
+    orderAddresses {
+      id
+      type
+      street
+      houseNumber
+      city
+      postCode
+      formatted
+      country
+      placeId
+      orderId
     }
   }
 }
