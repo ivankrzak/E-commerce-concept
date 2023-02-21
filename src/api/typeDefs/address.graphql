@@ -1,0 +1,81 @@
+enum AddressType {
+  BILLING
+  SHIPPING
+}
+
+type Address {
+  id: Int!
+  type: AddressType!
+  street: String!
+  houseNumber: String
+  city: String!
+  postCode: String!
+  formatted: String!
+  country: String!
+  placeId: String!
+  userId: String!
+  user: User
+}
+
+input PlacesInput {
+  searchQuery: String!
+}
+
+type GeoapifyApiResponse {
+  country: String
+  country_code: String
+  state: String
+  county: String
+  city: String
+  postcode: String
+  district: String
+  street: String
+  housenumber: String
+  lon: Float!
+  lat: Float!
+  state_code: String
+  formatted: String
+  address_line1: String
+  address_line2: String
+  place_id: String
+}
+
+type GeoapifyAddress {
+  country: String
+  countryCode: String
+  state: String
+  county: String
+  city: String
+  postCode: String
+  district: String
+  street: String
+  houseNumber: String
+  lon: Float!
+  lat: Float!
+  stateCode: String
+  formatted: String
+  addressLine1: String
+  addressLine2: String
+  placeId: String
+}
+
+input CreateAddressInput {
+  id: Int
+  type: AddressType!
+  street: String!
+  houseNumber: String
+  city: String!
+  postCode: String!
+  formatted: String!
+  country: String!
+  placeId: String!
+  userId: String!
+}
+
+type Query {
+  places(input: PlacesInput!): [GeoapifyAddress!]!
+}
+
+type Mutation {
+  createOrUpdateAddress(input: CreateAddressInput!): Address!
+}

@@ -16,6 +16,26 @@ export type Scalars = {
   Date: string;
 };
 
+export type Address = {
+  __typename?: 'Address';
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+  user?: Maybe<User>;
+  userId: Scalars['String'];
+};
+
+export enum AddressType {
+  Billing = 'BILLING',
+  Shipping = 'SHIPPING'
+}
+
 export type Category = {
   __typename?: 'Category';
   createdAt: Scalars['Date'];
@@ -33,16 +53,44 @@ export type ChangeOrderStatusInput = {
   status: StoreOrderStatus;
 };
 
+export type CreateAddressInput = {
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['Int']>;
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+  userId: Scalars['String'];
+};
+
 export type CreateCategoryInput = {
   name: Scalars['String'];
   parentCategoryId?: InputMaybe<Scalars['Int']>;
 };
 
+export type CreateOrderAddressInput = {
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: InputMaybe<Scalars['String']>;
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+};
+
 export type CreateOrderInput = {
+  addresses: Array<CreateOrderAddressInput>;
+  email: Scalars['String'];
+  name: Scalars['String'];
   notes?: InputMaybe<Scalars['String']>;
   orderedItems: Array<OrderItemInput>;
   paymentMethodId: Scalars['Int'];
   shippingMethodId: Scalars['Int'];
+  telNumber: Scalars['Int'];
   userId?: InputMaybe<Scalars['String']>;
 };
 
@@ -87,6 +135,46 @@ export type CreateUserInput = {
   password: Scalars['String'];
 };
 
+export type GeoapifyAddress = {
+  __typename?: 'GeoapifyAddress';
+  addressLine1?: Maybe<Scalars['String']>;
+  addressLine2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  countryCode?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  houseNumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  placeId?: Maybe<Scalars['String']>;
+  postCode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  stateCode?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+};
+
+export type GeoapifyApiResponse = {
+  __typename?: 'GeoapifyApiResponse';
+  address_line1?: Maybe<Scalars['String']>;
+  address_line2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  country_code?: Maybe<Scalars['String']>;
+  county?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  formatted?: Maybe<Scalars['String']>;
+  housenumber?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  place_id?: Maybe<Scalars['String']>;
+  postcode?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  state_code?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -96,6 +184,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   changeOrderStatus: Scalars['Boolean'];
   createCategory?: Maybe<Category>;
+  createOrUpdateAddress: Address;
   createOrder: StoreOrder;
   createProduct?: Maybe<Product>;
   createProductColor?: Maybe<ProductColor>;
@@ -122,6 +211,11 @@ export type MutationChangeOrderStatusArgs = {
 
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryInput;
+};
+
+
+export type MutationCreateOrUpdateAddressArgs = {
+  input: CreateAddressInput;
 };
 
 
@@ -209,6 +303,20 @@ export type MutationUpdateProductVariantArgs = {
   productVariantId: Scalars['Int'];
 };
 
+export type OrderAddress = {
+  __typename?: 'OrderAddress';
+  city: Scalars['String'];
+  country: Scalars['String'];
+  formatted: Scalars['String'];
+  houseNumber?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  orderId: Scalars['Int'];
+  placeId: Scalars['String'];
+  postCode: Scalars['String'];
+  street: Scalars['String'];
+  type: AddressType;
+};
+
 export type OrderItemInput = {
   productVariantId: Scalars['Int'];
   quantity: Scalars['Int'];
@@ -226,6 +334,10 @@ export enum PaymentStatus {
   Failed = 'FAILED',
   Successful = 'SUCCESSFUL'
 }
+
+export type PlacesInput = {
+  searchQuery: Scalars['String'];
+};
 
 export type Product = {
   __typename?: 'Product';
@@ -299,6 +411,7 @@ export type Query = {
   orderById: StoreOrder;
   orders: Array<StoreOrder>;
   paymentMethods: Array<PaymentMethod>;
+  places: Array<GeoapifyAddress>;
   productBySlug: Product;
   productColors?: Maybe<Array<ProductColor>>;
   productSizes?: Maybe<Array<ProductSize>>;
@@ -318,6 +431,11 @@ export type QueryOrderByIdArgs = {
 };
 
 
+export type QueryPlacesArgs = {
+  input: PlacesInput;
+};
+
+
 export type QueryProductBySlugArgs = {
   slug: Scalars['String'];
 };
@@ -333,8 +451,11 @@ export type ShippingMethod = {
 export type StoreOrder = {
   __typename?: 'StoreOrder';
   createdAt: Scalars['Date'];
+  email: Scalars['String'];
   id: Scalars['Int'];
+  name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
+  orderAddresses: Array<OrderAddress>;
   paymentMethod: PaymentMethod;
   paymentMethodId: Scalars['Int'];
   paymentStatus: PaymentStatus;
@@ -343,6 +464,7 @@ export type StoreOrder = {
   shippingTrackingNumber?: Maybe<Scalars['Int']>;
   status: StoreOrderStatus;
   storeOrderItems: Array<StoreOrderItems>;
+  telNumber: Scalars['Int'];
   totalAmount: Scalars['Int'];
   updatedAt: Scalars['Date'];
   user?: Maybe<User>;
@@ -418,8 +540,10 @@ export type UpdateProductVariantInput = {
 
 export type User = {
   __typename?: 'User';
+  address?: Maybe<Address>;
   email: Scalars['String'];
   name: Scalars['String'];
+  orders?: Maybe<Array<StoreOrder>>;
   password: Scalars['String'];
 };
 
@@ -427,6 +551,20 @@ export enum UserRole {
   Admin = 'ADMIN',
   Customer = 'CUSTOMER'
 }
+
+export type PlacesQueryVariables = Exact<{
+  input: PlacesInput;
+}>;
+
+
+export type PlacesQuery = { __typename?: 'Query', places: Array<{ __typename?: 'GeoapifyAddress', country?: string | null, countryCode?: string | null, state?: string | null, county?: string | null, city?: string | null, postCode?: string | null, district?: string | null, street?: string | null, houseNumber?: string | null, lon: number, lat: number, stateCode?: string | null, formatted?: string | null, addressLine1?: string | null, addressLine2?: string | null, placeId?: string | null }> };
+
+export type CreateOrUpdateAddressMutationVariables = Exact<{
+  input: CreateAddressInput;
+}>;
+
+
+export type CreateOrUpdateAddressMutation = { __typename?: 'Mutation', createOrUpdateAddress: { __typename?: 'Address', id: number, type: AddressType, street: string, houseNumber?: string | null, city: string, postCode: string, formatted: string, country: string, placeId: string, userId: string, user?: { __typename?: 'User', name: string, email: string } | null } };
 
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -480,14 +618,14 @@ export type UpdateProductMutation = { __typename?: 'Mutation', updateProduct?: {
 export type OrderListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OrderListQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null }> }> };
+export type OrderListQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, name: string, email: string, telNumber: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null }>, orderAddresses: Array<{ __typename?: 'OrderAddress', id: number, type: AddressType, street: string, houseNumber?: string | null, city: string, postCode: string, formatted: string, country: string, placeId: string, orderId: number }> }> };
 
 export type OrderByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null, productVariant?: { __typename?: 'ProductVariant', id: number, sku: number, quantity: number } | null }> } };
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'StoreOrder', id: number, totalAmount: number, shippingTrackingNumber?: number | null, notes?: string | null, status: StoreOrderStatus, paymentStatus: PaymentStatus, userId?: string | null, paymentMethodId: number, shippingMethodId: number, name: string, email: string, telNumber: number, createdAt: string, updatedAt: string, user?: { __typename?: 'User', email: string, name: string } | null, paymentMethod: { __typename?: 'PaymentMethod', id: number, isActive: boolean, name: string }, shippingMethod: { __typename?: 'ShippingMethod', id: number, isActive: boolean, name: string, price: number }, storeOrderItems: Array<{ __typename?: 'StoreOrderItems', id: number, name: string, quantity: number, price: number, storeOrderId?: number | null, productVariant?: { __typename?: 'ProductVariant', id: number, sku: number, quantity: number } | null }>, orderAddresses: Array<{ __typename?: 'OrderAddress', id: number, type: AddressType, street: string, houseNumber?: string | null, city: string, postCode: string, formatted: string, country: string, placeId: string, orderId: number }> } };
 
 export type LoginQueryVariables = Exact<{
   input: LoginInput;
@@ -497,6 +635,102 @@ export type LoginQueryVariables = Exact<{
 export type LoginQuery = { __typename?: 'Query', login?: boolean | null };
 
 
+export const PlacesDocument = gql`
+    query Places($input: PlacesInput!) {
+  places(input: $input) {
+    country
+    countryCode
+    state
+    county
+    city
+    postCode
+    district
+    street
+    houseNumber
+    lon
+    lat
+    stateCode
+    formatted
+    addressLine1
+    addressLine2
+    placeId
+  }
+}
+    `;
+
+/**
+ * __usePlacesQuery__
+ *
+ * To run a query within a React component, call `usePlacesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlacesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlacesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePlacesQuery(baseOptions: Apollo.QueryHookOptions<PlacesQuery, PlacesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PlacesQuery, PlacesQueryVariables>(PlacesDocument, options);
+      }
+export function usePlacesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlacesQuery, PlacesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PlacesQuery, PlacesQueryVariables>(PlacesDocument, options);
+        }
+export type PlacesQueryHookResult = ReturnType<typeof usePlacesQuery>;
+export type PlacesLazyQueryHookResult = ReturnType<typeof usePlacesLazyQuery>;
+export type PlacesQueryResult = Apollo.QueryResult<PlacesQuery, PlacesQueryVariables>;
+export const CreateOrUpdateAddressDocument = gql`
+    mutation CreateOrUpdateAddress($input: CreateAddressInput!) {
+  createOrUpdateAddress(input: $input) {
+    id
+    type
+    street
+    houseNumber
+    city
+    postCode
+    formatted
+    country
+    placeId
+    userId
+    user {
+      name
+      email
+    }
+  }
+}
+    `;
+export type CreateOrUpdateAddressMutationFn = Apollo.MutationFunction<CreateOrUpdateAddressMutation, CreateOrUpdateAddressMutationVariables>;
+
+/**
+ * __useCreateOrUpdateAddressMutation__
+ *
+ * To run a mutation, you first call `useCreateOrUpdateAddressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrUpdateAddressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrUpdateAddressMutation, { data, loading, error }] = useCreateOrUpdateAddressMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrUpdateAddressMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrUpdateAddressMutation, CreateOrUpdateAddressMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrUpdateAddressMutation, CreateOrUpdateAddressMutationVariables>(CreateOrUpdateAddressDocument, options);
+      }
+export type CreateOrUpdateAddressMutationHookResult = ReturnType<typeof useCreateOrUpdateAddressMutation>;
+export type CreateOrUpdateAddressMutationResult = Apollo.MutationResult<CreateOrUpdateAddressMutation>;
+export type CreateOrUpdateAddressMutationOptions = Apollo.BaseMutationOptions<CreateOrUpdateAddressMutation, CreateOrUpdateAddressMutationVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories {
@@ -873,6 +1107,9 @@ export const OrderListDocument = gql`
     userId
     paymentMethodId
     shippingMethodId
+    name
+    email
+    telNumber
     createdAt
     updatedAt
     user {
@@ -896,6 +1133,18 @@ export const OrderListDocument = gql`
       quantity
       price
       storeOrderId
+    }
+    orderAddresses {
+      id
+      type
+      street
+      houseNumber
+      city
+      postCode
+      formatted
+      country
+      placeId
+      orderId
     }
   }
 }
@@ -939,6 +1188,9 @@ export const OrderByIdDocument = gql`
     userId
     paymentMethodId
     shippingMethodId
+    name
+    email
+    telNumber
     createdAt
     updatedAt
     user {
@@ -967,6 +1219,18 @@ export const OrderByIdDocument = gql`
         sku
         quantity
       }
+    }
+    orderAddresses {
+      id
+      type
+      street
+      houseNumber
+      city
+      postCode
+      formatted
+      country
+      placeId
+      orderId
     }
   }
 }
