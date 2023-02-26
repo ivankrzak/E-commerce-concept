@@ -13,7 +13,7 @@ export const Card: ComponentSingleStyleConfig = {
     layout: {
       boxShadow: `0px 24px 64px 0px ${transparentize(
         0.95,
-        Colors.brand.black
+        Colors.backoffice.black
       )}`,
       borderRadius: 'md',
     },
@@ -24,15 +24,9 @@ export const Card: ComponentSingleStyleConfig = {
         backgroundColor: 'brand.brightGray',
         boxShadow: `0px 15px 25px 0px ${transparentize(
           0.8,
-          Colors.brand.black
+          Colors.backoffice.black
         )}`,
       },
-    },
-    choosePlan: {
-      textAlign: 'left',
-      fontSize: '15px',
-      fontFamily: 'Proxima Nova Light',
-      border: `2px solid ${Colors.brand.ultramarine}`,
     },
     disabled: {
       textAlign: 'left',

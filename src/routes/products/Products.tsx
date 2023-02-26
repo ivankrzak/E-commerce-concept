@@ -25,41 +25,38 @@ const Products = () => {
       {productData?.products.length !== 0 ? (
         <SimpleGrid columns={5} spacing="16px">
           {productData?.products?.map(
-            ({ slug, name, isActive, category, variants, titleImageUrl }) => {
-              console.log(variants.map(({ price }) => Number(price)))
-              return (
-                <ProductCard
-                  title={name}
-                  slug={slug}
-                  {...(titleImageUrl && { imageSrc: titleImageUrl })}
-                  productProps={[
-                    { label: 'Category', value: category?.name },
-                    {
-                      label: 'Status',
-                      value: isActive ? 'Active' : 'Disabled',
-                    },
-                    {
-                      label: 'Price',
-                      value: Math.min(
-                        ...variants.map(({ price }) => Number(price))
-                      ),
-                    },
-                    { label: 'Variants', value: `${variants?.length}` },
-                    {
-                      label: 'Inventory',
-                      value: `${variants?.length} units`,
-                    },
-                    {
-                      label: 'Is On Sale',
-                      value:
-                        variants?.map(({ salePrice }) => salePrice).length !== 0
-                          ? 'Yes'
-                          : 'No',
-                    },
-                  ]}
-                />
-              )
-            }
+            ({ slug, name, isActive, category, variants, titleImageUrl }) => (
+              <ProductCard
+                title={name}
+                slug={slug}
+                {...(titleImageUrl && { imageSrc: titleImageUrl })}
+                productProps={[
+                  { label: 'Category', value: category?.name },
+                  {
+                    label: 'Status',
+                    value: isActive ? 'Active' : 'Disabled',
+                  },
+                  {
+                    label: 'Price',
+                    value: Math.min(
+                      ...variants.map(({ price }) => Number(price))
+                    ),
+                  },
+                  { label: 'Variants', value: `${variants?.length}` },
+                  {
+                    label: 'Inventory',
+                    value: `${variants?.length} units`,
+                  },
+                  {
+                    label: 'Is On Sale',
+                    value:
+                      variants?.map(({ salePrice }) => salePrice).length !== 0
+                        ? 'Yes'
+                        : 'No',
+                  },
+                ]}
+              />
+            )
           )}
         </SimpleGrid>
       ) : (

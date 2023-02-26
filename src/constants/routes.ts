@@ -4,6 +4,7 @@ export type ReturnToSearchParam = {
 
 export const Route = {
   FrontPage: () => `/`,
+  ProductPage: ({ slug }: { slug: string }) => `/products/${slug}`,
   BackOffice: {
     BackofficeDashboard: () => '/backoffice',
     SignIn: () => '/backoffice/forbidden-access',

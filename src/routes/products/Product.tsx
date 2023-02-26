@@ -138,7 +138,7 @@ const Product = () => {
     setValue,
     control,
   } = methods
-  console.log('formErrors', formErrors)
+
   const productSlugWatch = useWatch({ control, name: 'slug' })
 
   const { data: productOptionsData } = useProductOptionsQuery()
@@ -474,7 +474,7 @@ const Product = () => {
                 <FormImageInput
                   id={FieldName.TitleImage}
                   label={FormLabel.titleImage}
-                  errorMessage={formErrors.titleImage?.message}
+                  errorMessage={String(formErrors.titleImage?.message)}
                   {...(productData?.productBySlug.titleImageUrl && {
                     imageSrc: productData?.productBySlug.titleImageUrl,
                   })}
