@@ -1,14 +1,17 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Center, SimpleGrid, Spinner, VStack } from '@chakra-ui/react'
+import { useProductListQuery } from 'generated/generated-graphql'
 import { getFrontStoreLayout } from 'layouts/StoreFrontLayout'
 import type { NextPageWithLayout } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { ProductCard } from 'components/backoffice/ProductCard'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPageWithLayout = () => {
   const { data: session } = useSession()
+  const { data: productData, loading } = useProductListQuery()
 
   return (
-    <>
+    <VStack>
       <h1 className={styles.title}>
         {session ? (
           <>
@@ -33,7 +36,49 @@ const Home: NextPageWithLayout = () => {
           </Button>
         )}
       </h1>
-    </>
+      {loading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <SimpleGrid columns={5} spacing="16px">
+          {productData?.products?.map(
+            ({ slug, name, isActive, category, variants, titleImageUrl }) => (
+              <ProductCard
+                title={name}
+                slug={slug}
+                {...(titleImageUrl && { imageSrc: titleImageUrl })}
+                productProps={[
+                  { label: 'Category', value: category?.name },
+                  {
+                    label: 'Status',
+                    value: isActive ? 'Active' : 'Disabled',
+                  },
+                  {
+                    label: 'Price',
+                    value: Math.min(
+                      ...variants.map(({ price }) => Number(price))
+                    ),
+                  },
+                  { label: 'Variants', value: `${variants?.length}` },
+                  {
+                    label: 'Inventory',
+                    value: `${variants?.length} units`,
+                  },
+                  {
+                    label: 'Is On Sale',
+                    value:
+                      variants?.map(({ salePrice }) => salePrice).length !== 0
+                        ? 'Yes'
+                        : 'No',
+                  },
+                ]}
+              />
+            )
+          )}
+        </SimpleGrid>
+      )}
+    </VStack>
   )
 }
 

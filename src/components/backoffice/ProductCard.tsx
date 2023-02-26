@@ -21,7 +21,7 @@ export const ProductCard = ({
   imageSrc,
   productProps,
 }: ProductCardProps) => (
-  <Link href={Route.BackOffice.ProductPage({ slug })} passHref>
+  <Link href={Route.ProductPage({ slug })} passHref>
     <Flex
       w="220px"
       h="fit-content"
