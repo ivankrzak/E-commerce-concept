@@ -16,6 +16,10 @@ const moduleExports = {
   images: {
     domains: ['e-commerce-pull-zone.b-cdn.net'],
   },
+  i18n: {
+    locales: ['en', 'sk', 'de'],
+    defaultLocale: 'en',
+  },
 }
 
 module.exports = moduleExports
