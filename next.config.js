@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const moduleExports = {

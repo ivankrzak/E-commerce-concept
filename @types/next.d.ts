@@ -31,12 +31,20 @@ declare module 'next' {
 }
 
 declare module 'next/app' {
+  type Messages = { common: typeof import('../public/locales/en/common.json') }
+  type IntlMessages = Messages
+
+  type PageProps = {
+    messages: IntlMessages
+  }
+
   export declare type AppProps = Pick<
     CompletePrivateRouteInfo,
     'Component' | 'err'
   > & {
     router: Router
     session: Session
+    pageProps: PageProps
   } & Record<string, any> & {
       Component: {
         getLayout?: (page: JSX.Element) => JSX.Element

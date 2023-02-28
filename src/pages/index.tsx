@@ -2,12 +2,15 @@ import { Button, Center, SimpleGrid, Spinner, VStack } from '@chakra-ui/react'
 import { useProductListQuery } from 'generated/generated-graphql'
 import { getFrontStoreLayout } from 'layouts/StoreFrontLayout'
 import type { NextPageWithLayout } from 'next'
+import { GetStaticPropsContext } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import { ProductCard } from 'components/backoffice/ProductCard'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPageWithLayout = () => {
   const { data: session } = useSession()
+  const t = useTranslations()
   const { data: productData, loading } = useProductListQuery()
 
   return (
@@ -36,6 +39,7 @@ const Home: NextPageWithLayout = () => {
           </Button>
         )}
       </h1>
+      <h1>{t('title')}</h1>
       {loading ? (
         <Center>
           <Spinner />
@@ -84,3 +88,14 @@ const Home: NextPageWithLayout = () => {
 
 Home.getLayout = getFrontStoreLayout
 export default Home
+
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
+  const lang = locale ?? 'en'
+  return {
+    props: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      messages: (await import(`../../public/locales/${lang}/common.json`))
+        .default,
+    },
+  }
+}
