@@ -7,7 +7,6 @@ import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { theme } from 'theme'
 import { Fonts } from 'theme/Fonts'
-import '../styles/globals.css'
 
 const MyApp = ({ Component, session, pageProps }: AppProps) => {
   const getLayout = Component.getLayout || ((page: ReactNode) => page)

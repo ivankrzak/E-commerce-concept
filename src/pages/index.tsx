@@ -4,7 +4,6 @@ import { getFrontStoreLayout } from 'layouts/StoreFrontLayout'
 import type { NextPageWithLayout } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { ProductCard } from 'components/backoffice/ProductCard'
-import styles from '../styles/Home.module.css'
 
 const Home: NextPageWithLayout = () => {
   const { data: session } = useSession()
@@ -12,7 +11,7 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <VStack>
-      <h1 className={styles.title}>
+      <h1>
         {session ? (
           <>
             Welcome to <a href="https://nextjs.org">Next.js!</a>
