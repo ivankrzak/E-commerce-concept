@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import apolloClient from 'lib/apollo'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
+import { NextIntlProvider } from 'next-intl'
 import { theme } from 'theme'
 import { Fonts } from 'theme/Fonts'
 import '../styles/globals.css'
@@ -17,7 +18,9 @@ const MyApp = ({ Component, session, pageProps }: AppProps) => {
       <Fonts />
       <ApolloProvider client={apolloClient}>
         <SessionProvider session={session}>
-          {getLayout(<Component {...pageProps} />)}
+          <NextIntlProvider messages={pageProps.messages}>
+            {getLayout(<Component {...pageProps} />)}
+          </NextIntlProvider>
         </SessionProvider>
       </ApolloProvider>
     </ChakraProvider>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const moduleExports = {
@@ -15,6 +16,10 @@ const moduleExports = {
   },
   images: {
     domains: ['e-commerce-pull-zone.b-cdn.net'],
+  },
+  i18n: {
+    locales: ['en', 'sk', 'de'],
+    defaultLocale: 'en',
   },
 }
 
