@@ -2,15 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  // This is for planet scale setup
-  referentialIntegrity = "prisma"
+  provider = "postgresql"
+  url      = env("POSTGRES_CONNECTION_STRING")
 }
 
 enum ProductStatus {
@@ -130,7 +127,7 @@ model Product {
   slug                    String           @unique
   name                    String           @unique
   shortDescription        String?          @db.VarChar(50)
-  description             String?          @db.LongText
+  description             String?          @db.VarChar(5000)
   categoryId              Int?
   titleImageUrl           String?
   isActive                Boolean          @default(true)
