@@ -187,7 +187,7 @@ const ProductVariantssData: Prisma.ProductVariantCreateInput[] = [
   {
     sku: 2001,
     quantity: 100,
-    color: { connect: { name: 'BLack' } },
+    color: { connect: { name: 'Black' } },
     size: { connect: { value: 'XS' } },
     product: { connect: { slug: 'graphql-tee' } },
     price: 39,
