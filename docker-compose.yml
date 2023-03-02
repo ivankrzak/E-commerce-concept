@@ -1,16 +1,18 @@
 version: '3'
 services:
-  e-commerce-concept:
-    container_name: E-commerce-concept
-    platform: linux/amd64
-    image: mysql
+  ecommerce-concept-db:
+    container_name: E-commerce-concept-Postgres
+    platform: linux/arm64
+    image: timescale/timescaledb:latest-pg15
     restart: always
     ports:
-      - '5455:3306'
+      - '${DB_PORT}:5440'
     environment:
-      MYSQL_ROOT_PASSWORD: prisma
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: '${DB_NAME}'
     volumes:
-      - e-commerce-concept-volume:/var/lib/mysql
+      - ecommerce-concept-db-volume:/var/lib/postgresql/data
 
 volumes:
-  e-commerce-concept-volume:
+  ecommerce-concept-db-volume:
